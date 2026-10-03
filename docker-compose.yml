@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vantawave}
+      POSTGRES_USER: ${POSTGRES_USER:-vantawave}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - vantawave_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vantawave} -d ${POSTGRES_DB:-vantawave}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+    environment:
+      VANTAWAVE_DATABASE_URL: ${VANTAWAVE_DATABASE_URL:-postgresql+psycopg://vantawave:change-me@postgres:5432/vantawave}
+      VANTAWAVE_READINESS_REQUIRES_DATABASE: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${VANTAWAVE_PORT:-8000}:8000"
+    volumes:
+      - ./artifacts:/app/artifacts
+    command:
+      - /bin/sh
+      - -c
+      - >
+        alembic upgrade head &&
+        python -m uvicorn vantawave.api.main:app --host 0.0.0.0 --port 8000 --proxy-headers
+    restart: unless-stopped
+
+volumes:
+  vantawave_pgdata:

@@ -6,7 +6,7 @@ fastapi>=0.115
 uvicorn>=0.30
 pydantic>=2.8
 pyyaml>=6.0
-SQLAlchemy<2.1,>=2.0.54
+SQLAlchemy<2.1,>=2.0
 alembic<2,>=1.20
 
 [boosting]
@@ -20,6 +20,9 @@ pytest>=8.0
 ruff>=0.6
 httpx>=0.27
 
+[embeddings]
+sentence-transformers>=3.0
+
 [explain]
 shap>=0.46
 
@@ -31,6 +34,7 @@ shap>=0.46
 torch>=2.7
 scapy>=2.6
 psycopg[binary]<4,>=3.2
+sentence-transformers>=3.0
 
 [mlops]
 mlflow>=3.0

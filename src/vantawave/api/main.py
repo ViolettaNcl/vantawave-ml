@@ -1,6 +1,10 @@
 from importlib.util import find_spec
 
 from fastapi import FastAPI, HTTPException
+from vantawave.api.ai_routes import router as ai_router
+from vantawave.core.readiness import readiness_report
+from vantawave.core.logging.json_logger import configure_logging
+from vantawave.core.settings import load_settings
 
 from vantawave.api.schemas import RiskRequest, RiskResponse
 from vantawave.data.awid3 import (
@@ -20,18 +24,23 @@ from vantawave.sensors.capabilities import detect_host_capabilities
 from vantawave.sensors.events import EventType, WirelessEvent
 from vantawave.sensors.features.window import WindowFeatures
 
+settings = load_settings()
+configure_logging(level=settings.log_level, format_name=settings.log_format)
+
 app = FastAPI(
     title="VantaWave ML",
-    version="0.9.0",
+    version="0.11.0",
     description="Wi-Fi telemetry, ML, deep anomaly detection, MLOps and AI research platform.",
 )
+
+app.include_router(ai_router)
 
 
 @app.get("/")
 def root():
     return {
         "project": "VantaWave ML",
-        "version": "0.9.0",
+        "version": "0.11.0",
         "status": "running",
         "docs": "/docs",
         "health": "/health",
@@ -41,7 +50,30 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "project": "VantaWave ML", "version": "0.9.0"}
+    return {"status": "ok", "project": "VantaWave ML", "version": "0.11.0"}
+
+
+@app.get("/ready")
+def ready():
+    report = readiness_report(
+        require_database=settings.readiness_requires_database,
+    )
+    if not report["ready"]:
+        raise HTTPException(status_code=503, detail=report)
+    return report
+
+
+@app.get("/config/public")
+def public_config():
+    return {
+        "environment": settings.environment,
+        "host": settings.host,
+        "port": settings.port,
+        "log_level": settings.log_level,
+        "log_format": settings.log_format,
+        "knowledge_paths": list(settings.knowledge_paths),
+        "readiness_requires_database": settings.readiness_requires_database,
+    }
 
 
 @app.get("/features")

@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "0.9.0"
+    assert body["version"] == "0.11.0"
 
 
 def test_health():
@@ -124,3 +124,24 @@ def test_monitoring_policy():
     response = client.get("/monitoring/policy")
     assert response.status_code == 200
     assert "interval_hours" in response.json()
+
+
+def test_ai_capabilities():
+    response = client.get("/ai/capabilities")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["grounded_analyst"] is True
+    assert "packet_injection" in body["forbidden_autonomous_actions"]
+
+
+def test_readiness_endpoint():
+    response = client.get("/ready")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["ready"] is True
+
+
+def test_public_config():
+    response = client.get("/config/public")
+    assert response.status_code == 200
+    assert "database_url" not in response.json()

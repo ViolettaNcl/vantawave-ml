@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+__pycache__
+.pytest_cache
+.ruff_cache
+artifacts
+mlruns
+*.pyc
+*.pyo
+*.db
+*.joblib
+*.pt
+.env
+data/raw
+data/external

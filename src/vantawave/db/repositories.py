@@ -79,6 +79,9 @@ class IncidentRepository:
     def __init__(self, session):
         self.session = session
 
+    def get(self, incident_id: str) -> IncidentRecord | None:
+        return self.session.get(IncidentRecord, incident_id)
+
     def add(
         self,
         *,

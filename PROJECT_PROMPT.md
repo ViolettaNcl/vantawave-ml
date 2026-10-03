@@ -30,14 +30,19 @@ For each development step:
 
 ## Current baseline
 
-v0.9 includes the Authorized Lab plus a persistent SQLAlchemy data platform,
-SQLite/PostgreSQL support, Alembic migrations, feature/anomaly-score drift,
-persistent evaluations and retraining recommendations.
+v0.11 combines v0.10 and v0.11.
 
-Future releases must preserve:
+The platform now includes persisted security evidence, local/semantic RAG,
+grounded Security Analyst reports with citations, restricted read-only agent
+planning, environment configuration, structured logs, readiness checks,
+Docker/Compose and PostgreSQL production deployment.
 
-- storage abstraction compatible with SQLite and PostgreSQL;
-- schema changes through migrations;
-- retraining recommendations with explicit recorded reasons;
-- drift events are monitoring evidence, not automatic proof of attacks;
-- AI layers must read persisted evidence rather than fabricate facts.
+Future work must preserve:
+
+- AI claims are grounded in persisted evidence or retrieved knowledge;
+- unsupported evidence produces uncertainty rather than invented facts;
+- citations must come from the supplied evidence allow-list;
+- AI/agent actions remain read-only and defensive;
+- production secrets stay outside source control;
+- database schema changes use Alembic;
+- readiness is distinct from process liveness.
