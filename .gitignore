@@ -4,9 +4,11 @@ __pycache__/
 .ruff_cache/
 artifacts/
 data/private/
+data/demo/*.csv
 *.pcap
 *.pcapng
 *.hc22000
+*.joblib
 .env
-
-data/demo/*.csv
+.coverage
+htmlcov/

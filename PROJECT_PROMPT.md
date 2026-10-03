@@ -26,3 +26,9 @@ For each development step:
 - measure the output;
 - document limitations;
 - then continue.
+
+
+## Current baseline
+
+v0.3 introduces the first multi-model data/ML core. Future work must preserve
+its APIs and tests unless a documented migration is required.
