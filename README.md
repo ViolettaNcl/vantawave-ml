@@ -2,39 +2,54 @@
 
 **End-to-end Wi‑Fi Security, Machine Learning & AI Research Platform**
 
-VantaWave ML is an independent portfolio and learning project for building a
-measurable ML security pipeline: data ingestion, validation, feature
-engineering, supervised classification, anomaly detection, experiment
-tracking, incident/risk analysis, APIs, and later passive Wi‑Fi telemetry,
-MLOps, explainability, RAG, and a SOC-style dashboard.
+VantaWave ML is an independent portfolio/research project that combines
+data engineering, wireless-security telemetry, supervised ML, anomaly
+detection, model evaluation, explainability, MLOps foundations, risk analysis
+and — in later releases — passive Wi‑Fi monitoring, authorized lab experiments,
+grounded AI analysis and a SOC-style dashboard.
 
-## v0.3 — Data & ML Core
+## v0.4 — Research Dataset & Evaluation Layer
 
-Implemented:
+v0.4 moves the project from synthetic-only ML experiments toward a real
+wireless intrusion-detection research workflow.
 
-- CSV and optional Parquet dataset loader;
-- explicit Wi‑Fi feature schema;
-- dataset quality validation;
-- duplicate/missing/bounds checks;
-- class-imbalance warnings;
-- stratified train/validation/test splitting;
-- Logistic Regression baseline;
-- Random Forest baseline;
-- Histogram Gradient Boosting baseline;
-- optional CatBoost adapter;
-- Isolation Forest anomaly detection;
-- reusable binary classification metrics;
-- automatic model benchmark;
-- model artifact saving;
-- JSON benchmark reports;
-- file-based experiment tracking foundation;
-- transparent Incident/Risk Engine;
-- expanded FastAPI endpoints;
-- GitHub Actions CI;
-- architecture/data/ML/evaluation/limitations docs;
-- expanded automated test suite.
+### New in v0.4
 
-## Run locally
+- AWID3-style CSV adapter;
+- 16-feature IEEE 802.11 research schema;
+- automatic label-column detection;
+- common AWID3 column aliases;
+- binary Normal/Attack target mapping;
+- dataset profiling;
+- target-leakage checks;
+- numeric/categorical preprocessing inside ML pipelines;
+- 70/15/15 train-validation-test split;
+- Logistic Regression AWID3 pipeline;
+- Random Forest AWID3 pipeline;
+- validation model selection + separate test reporting;
+- held-out permutation feature importance;
+- structured research JSON report;
+- optional MLflow tracking adapter;
+- optional SHAP dependency group;
+- `/research/awid3/schema` API endpoint;
+- AWID3 research documentation;
+- expanded CI and tests.
+
+## Existing ML Core
+
+The earlier aggregated-feature pipeline remains available and contains:
+
+- data validation;
+- Logistic Regression;
+- Random Forest;
+- Histogram Gradient Boosting;
+- Isolation Forest;
+- benchmark reports;
+- experiment storage;
+- Incident/Risk Engine;
+- FastAPI.
+
+## Install
 
 ```powershell
 py -m venv .venv
@@ -44,46 +59,50 @@ pip install -e ".[dev]"
 python -m pytest
 ```
 
-## Generate demo data
+## Demo pipeline
 
 ```powershell
 python scripts/generate_demo_data.py
-```
-
-## Validate a dataset
-
-```powershell
 python scripts/validate_dataset.py data/demo/wifi_events.csv
-```
-
-## Run the model benchmark
-
-```powershell
 python scripts/train_benchmark.py data/demo/wifi_events.csv
 ```
 
-Benchmark artifacts are written under `artifacts/benchmark/`.
+## AWID3-shaped research smoke test
 
-## Start the API
+This fixture has the same selected column structure but is still synthetic:
+
+```powershell
+python scripts/generate_awid3_fixture.py
+python scripts/inspect_awid3.py data/demo/awid3_fixture.csv
+python scripts/train_awid3.py data/demo/awid3_fixture.csv
+```
+
+## Real AWID3 workflow
+
+After obtaining an AWID3 CSV according to the dataset owner's terms:
+
+```powershell
+python scripts/inspect_awid3.py "C:\path\to\AWID3.csv"
+python scripts/train_awid3.py "C:\path\to\AWID3.csv"
+```
+
+See `docs/awid3.md`.
+
+## API
 
 ```powershell
 python -m uvicorn vantawave.api.main:app --reload
 ```
 
-Useful endpoints:
+Then open:
 
-- `/`
-- `/health`
-- `/features`
-- `/models`
-- `/risk/score`
-- `/docs`
+`http://127.0.0.1:8000/docs`
 
-## Important limitation
+## Research integrity
 
-The bundled demo generator is synthetic. Its metrics validate the software
-pipeline only and must not be presented as real-world Wi‑Fi detection
-performance.
+Synthetic metrics are **not** real-world Wi‑Fi IDS results. Real performance
+claims require actual external research data or authorized lab captures.
 
-The next major release replaces demo-only evaluation with a public research
-dataset adapter and dataset-specific preprocessing.
+The project deliberately keeps preprocessing inside trainable pipelines and
+maintains a separate test set so that test results are not used as model
+selection criteria.

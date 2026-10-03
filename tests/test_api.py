@@ -6,7 +6,7 @@ client = TestClient(app)
 def test_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "0.3.0"
+    assert response.json()["version"] == "0.4.0"
 
 def test_health():
     assert client.get("/health").json()["status"] == "ok"
@@ -29,3 +29,11 @@ def test_risk_score():
     })
     assert response.status_code == 200
     assert 0 <= response.json()["score"] <= 100
+
+
+def test_awid3_schema():
+    response = client.get("/research/awid3/schema")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["feature_count"] == 16
+    assert "frame.len" in body["numeric"]

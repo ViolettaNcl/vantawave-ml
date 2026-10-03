@@ -12,3 +12,8 @@ data/demo/*.csv
 .env
 .coverage
 htmlcov/
+
+data/external/
+data/raw/
+data/processed/
+data/demo/awid3_fixture.csv

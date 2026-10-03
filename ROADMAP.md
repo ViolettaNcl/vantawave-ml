@@ -7,65 +7,62 @@
 - [x] Isolation Forest baseline
 
 ## v0.2 — Runnable ML Demo
-- [x] API root
-- [x] reproducible demo dataset
-- [x] baseline training/evaluation
-- [x] expanded tests
+- [x] reproducible demo data
+- [x] baseline evaluation
+- [x] API tests
 
 ## v0.3 — Data & ML Core
-- [x] dataset loaders
 - [x] data validation
-- [x] stratified train/validation/test split
-- [x] Logistic Regression
-- [x] Random Forest
-- [x] Histogram Gradient Boosting
-- [x] optional CatBoost adapter
+- [x] supervised baselines
+- [x] anomaly detection
 - [x] model benchmark
-- [x] reusable metrics
-- [x] experiment-store foundation
 - [x] Risk Engine
-- [x] expanded API
-- [x] CI workflow
-- [x] technical docs
+- [x] CI
 
-## v0.4 — Real Research Dataset
-- [ ] public Wi-Fi intrusion dataset adapter
-- [ ] dataset-specific schema mapping
-- [ ] leakage review
-- [ ] real EDA/report
-- [ ] real train/validation/test benchmark
-- [ ] error analysis
+## v0.4 — Research Dataset & Evaluation
+- [x] AWID3 research adapter
+- [x] expert 802.11 feature set
+- [x] dataset profile
+- [x] leakage-name audit
+- [x] preprocessing pipelines
+- [x] train/validation/test discipline
+- [x] held-out test metrics
+- [x] permutation importance
+- [x] optional MLflow adapter
+- [x] research reports
+- [x] research CI smoke test
 
-## v0.5 — MLOps & Explainability
-- [ ] MLflow integration
-- [ ] model registry metadata
-- [ ] SHAP for supported models
-- [ ] reproducible experiment IDs
-- [ ] model comparison reports
+## v0.5 — MLOps + Explainability
+- [ ] native MLflow run logging
+- [ ] experiment/model registry metadata
+- [ ] SHAP explanations
+- [ ] threshold calibration
+- [ ] error-analysis reports
+- [ ] model comparison promotion policy
 
 ## v0.6 — Deep Anomaly Detection
 - [ ] PyTorch autoencoder
-- [ ] threshold calibration
-- [ ] anomaly score distributions
-- [ ] drift groundwork
+- [ ] anomaly calibration
+- [ ] unknown-behavior evaluation
+- [ ] drift baseline
 
-## v0.7 — Passive Wi-Fi Sensor
-- [ ] sensor abstraction
-- [ ] passive telemetry ingestion
+## v0.7 — Passive Wi‑Fi Sensor
+- [ ] hardware/sensor abstraction
+- [ ] passive telemetry
 - [ ] event normalization
-- [ ] Windows/Linux compatibility study
+- [ ] rolling-window feature builder
 
 ## v0.8 — Authorized Lab
-- [ ] registered test-target workflow
-- [ ] experiment sessions
+- [ ] registered AP workflow
+- [ ] lab sessions
 - [ ] before/after telemetry comparison
-- [ ] incident generation
+- [ ] automatic incidents
 
 ## v0.9+ — Productization
 - [ ] model monitoring/drift
 - [ ] PostgreSQL
-- [ ] AI Security Analyst + grounded RAG
+- [ ] grounded AI Security Analyst + RAG
 - [ ] Docker
 - [ ] production API
-- [ ] SOC dashboard
+- [ ] professional SOC dashboard
 - [ ] v1.0 portfolio release
