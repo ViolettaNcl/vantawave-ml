@@ -13,5 +13,7 @@ def require_authorized_target(target: LabTarget) -> None:
         raise PermissionError(
             "Active lab actions are disabled for targets that are not explicitly authorized."
         )
+    if not target.ssid.strip():
+        raise ValueError("An authorized lab target must have an explicit SSID.")
     if not target.bssid.strip():
         raise ValueError("An authorized lab target must have an explicit BSSID.")

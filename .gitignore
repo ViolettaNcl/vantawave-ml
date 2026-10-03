@@ -8,3 +8,5 @@ data/private/
 *.pcapng
 *.hc22000
 .env
+
+data/demo/*.csv

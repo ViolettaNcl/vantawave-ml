@@ -1,66 +1,87 @@
 # VantaWave ML
 
-**Authorized Wi‑Fi Security Research & ML Anomaly Detection Lab**
+**Wi‑Fi Security & Machine Learning Research Platform**
 
-VantaWave is a learning project for studying wireless-network telemetry,
-machine-learning based anomaly detection, attack classification, model
-evaluation, and defensive security workflows on networks you own or are
-explicitly authorized to test.
+VantaWave ML is an independent portfolio and learning project focused on
+wireless-network telemetry, machine-learning anomaly detection, attack
+classification, experiment tracking, and authorized security research on
+networks owned by or explicitly permitted to the operator.
 
-## Core goals
+## Current version — v0.2
 
-- Build a reproducible Wi‑Fi telemetry pipeline.
-- Learn feature engineering for 802.11/network events.
-- Train a baseline anomaly detector.
-- Add supervised attack classification using public research datasets.
-- Measure precision, recall, F1, PR-AUC, false-positive rate and latency.
-- Add a web/API layer for experiments and incident review.
-- Add an allowlisted lab mode so active experiments can only target registered
-  laboratory access points.
-- Later integrate selected Wi‑Fi sensor functionality inspired by Wifit3.
+Implemented:
 
-## Upstream reference
+- clean Python package structure;
+- FastAPI application;
+- `/` project landing endpoint;
+- `/health` health check;
+- authorized-lab target validation;
+- Wi‑Fi-oriented feature schema;
+- Isolation Forest anomaly-detection baseline;
+- reproducible synthetic demo dataset generator;
+- baseline training script;
+- baseline evaluation script;
+- pytest test suite.
 
-Wifit3:
-https://github.com/derv82/wifit3
+## Quick start
 
-Keep upstream attribution and license terms if code is copied or adapted.
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+python -m pytest
+python -m uvicorn vantawave.api.main:app --reload
+```
 
-## Proposed architecture
+Open:
 
-Wi-Fi sensor / dataset
-        |
-        v
-Telemetry normalizer
-        |
-        v
-Feature extractor
-        |
-        +--> supervised classifier
-        |
-        +--> anomaly detector
-        |
-        v
-Risk / incident engine
-        |
-        v
-FastAPI + dashboard + experiment reports
+- API root: http://127.0.0.1:8000/
+- Swagger UI: http://127.0.0.1:8000/docs
+- Health: http://127.0.0.1:8000/health
 
-## First milestone
+## Run the ML demo
 
-1. Use CSV research data or your own benign telemetry.
-2. Produce a fixed feature table.
-3. Train Isolation Forest baseline.
-4. Save metrics and predictions.
-5. Add tests that prevent unregistered lab targets.
-6. Only after the ML baseline works, integrate live Wi‑Fi telemetry.
+Generate a reproducible demo dataset:
 
-## Safety scope
+```powershell
+python scripts/generate_demo_data.py
+```
 
-This repository is designed for:
-- your own router/test SSID;
-- equipment you control;
-- an isolated lab;
-- networks where you have explicit permission.
+Train the Isolation Forest baseline:
 
-It is not intended to automate access to arbitrary third-party networks.
+```powershell
+python scripts/train_baseline.py data/demo/wifi_events.csv
+```
+
+Evaluate it:
+
+```powershell
+python scripts/evaluate_baseline.py data/demo/wifi_events.csv
+```
+
+This demo dataset is synthetic and exists only to validate the complete ML
+pipeline. It must not be presented as evidence of real-world Wi‑Fi detection
+performance.
+
+## Planned roadmap
+
+1. Real public Wi‑Fi intrusion dataset adapter.
+2. Data validation and leakage checks.
+3. Logistic Regression / Random Forest / CatBoost comparison.
+4. Experiment tracking with MLflow.
+5. Live passive Wi‑Fi telemetry adapter.
+6. Authorized laboratory experiment mode.
+7. Dashboard and incident timeline.
+8. Deep anomaly detection with PyTorch.
+9. AI incident explanation from measured evidence.
+
+## Project scope
+
+VantaWave ML is designed for defensive research and authorized experiments.
+Active lab functionality must be restricted to explicitly registered test
+equipment.
+
+No third-party source code is bundled in this starter release.
+External libraries and research datasets remain subject to their respective
+licenses and attribution requirements.

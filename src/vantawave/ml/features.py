@@ -18,4 +18,10 @@ def select_features(frame: pd.DataFrame) -> pd.DataFrame:
     missing = [c for c in DEFAULT_FEATURES if c not in frame.columns]
     if missing:
         raise ValueError(f"Missing required features: {missing}")
-    return frame[DEFAULT_FEATURES].copy()
+
+    result = frame[DEFAULT_FEATURES].copy()
+
+    if result.isnull().any().any():
+        raise ValueError("Feature matrix contains missing values.")
+
+    return result
