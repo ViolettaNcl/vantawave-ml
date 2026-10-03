@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vantawave-ml"
-version = "0.4.0"
-description = "Wi-Fi security, machine-learning and AI research platform"
+version = "0.5.0"
+description = "Wi-Fi security, machine-learning, MLOps and AI research platform"
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=2.0",
@@ -26,12 +26,20 @@ dev = [
 ]
 research = [
   "pyarrow>=17",
+]
+mlops = [
   "mlflow>=3.0",
 ]
 boosting = [
   "catboost>=1.2",
 ]
 explain = [
+  "shap>=0.46",
+]
+full = [
+  "pyarrow>=17",
+  "mlflow>=3.0",
+  "catboost>=1.2",
   "shap>=0.46",
 ]
 

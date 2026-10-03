@@ -27,14 +27,14 @@ jobs:
       - name: Tests
         run: python -m pytest
 
-      - name: Demo ML smoke test
+      - name: Demo pipeline
         run: |
           python scripts/generate_demo_data.py
           python scripts/validate_dataset.py data/demo/wifi_events.csv
           python scripts/train_benchmark.py data/demo/wifi_events.csv
 
-      - name: AWID3 research smoke test
+      - name: AWID3 v0.5 lifecycle smoke test
         run: |
           python scripts/generate_awid3_fixture.py
           python scripts/inspect_awid3.py data/demo/awid3_fixture.csv
-          python scripts/train_awid3.py data/demo/awid3_fixture.csv
+          python scripts/run_v05_research.py data/demo/awid3_fixture.csv

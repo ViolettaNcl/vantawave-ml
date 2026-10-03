@@ -30,5 +30,15 @@ For each development step:
 
 ## Current baseline
 
-v0.3 introduces the first multi-model data/ML core. Future work must preserve
-its APIs and tests unless a documented migration is required.
+v0.5 includes the AWID3 research pipeline, threshold calibration, error
+analysis, local model registry, explicit promotion policy, optional MLflow
+Model Registry integration, optional SHAP explainability and rich reports.
+
+Future releases must preserve the following rules:
+
+- no threshold selection on the test set;
+- no silent promotion of the newest model;
+- promotion criteria must remain explicit and auditable;
+- model versions must retain lineage/metrics;
+- SHAP explains model behavior but does not replace evaluation;
+- synthetic fixture results must never be presented as real-world IDS results.

@@ -12,3 +12,5 @@ def test_experiment_store_roundtrip(tmp_path):
     runs = store.list_runs()
     assert len(runs) == 1
     assert runs[0]["name"] == "demo"
+    loaded = store.get_run(run.run_id)
+    assert loaded["run_id"] == run.run_id

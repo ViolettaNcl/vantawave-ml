@@ -1,55 +1,33 @@
 # VantaWave ML
 
-**End-to-end Wi‑Fi Security, Machine Learning & AI Research Platform**
+**Wi‑Fi Security, Machine Learning, MLOps & AI Research Platform**
 
 VantaWave ML is an independent portfolio/research project that combines
-data engineering, wireless-security telemetry, supervised ML, anomaly
-detection, model evaluation, explainability, MLOps foundations, risk analysis
-and — in later releases — passive Wi‑Fi monitoring, authorized lab experiments,
-grounded AI analysis and a SOC-style dashboard.
+wireless-security data engineering, supervised ML, anomaly detection,
+threshold calibration, model evaluation, experiment tracking, model registry,
+explainability, risk analysis and — in later versions — passive telemetry,
+authorized lab validation, grounded AI analysis and a SOC-style interface.
 
-## v0.4 — Research Dataset & Evaluation Layer
+## v0.5 — MLOps, Calibration, Explainability & Promotion
 
-v0.4 moves the project from synthetic-only ML experiments toward a real
-wireless intrusion-detection research workflow.
+This release turns the v0.4 research pipeline into a model-lifecycle workflow.
 
-### New in v0.4
+### New in v0.5
 
-- AWID3-style CSV adapter;
-- 16-feature IEEE 802.11 research schema;
-- automatic label-column detection;
-- common AWID3 column aliases;
-- binary Normal/Attack target mapping;
-- dataset profiling;
-- target-leakage checks;
-- numeric/categorical preprocessing inside ML pipelines;
-- 70/15/15 train-validation-test split;
-- Logistic Regression AWID3 pipeline;
-- Random Forest AWID3 pipeline;
-- validation model selection + separate test reporting;
-- held-out permutation feature importance;
-- structured research JSON report;
-- optional MLflow tracking adapter;
-- optional SHAP dependency group;
-- `/research/awid3/schema` API endpoint;
-- AWID3 research documentation;
-- expanded CI and tests.
+- validation-only threshold calibration;
+- calibrated held-out test evaluation;
+- false-positive / false-negative error analysis;
+- transparent promotion policy;
+- local model registry with versions, SHA-256 and aliases;
+- `candidate` / `champion` model lifecycle;
+- optional MLflow tracking and Model Registry;
+- optional SHAP TreeExplainer support;
+- richer JSON + Markdown research reports;
+- local MLflow SQLite configuration;
+- expanded MLOps API endpoints;
+- expanded automated tests.
 
-## Existing ML Core
-
-The earlier aggregated-feature pipeline remains available and contains:
-
-- data validation;
-- Logistic Regression;
-- Random Forest;
-- Histogram Gradient Boosting;
-- Isolation Forest;
-- benchmark reports;
-- experiment storage;
-- Incident/Risk Engine;
-- FastAPI.
-
-## Install
+## Install — base development
 
 ```powershell
 py -m venv .venv
@@ -59,34 +37,66 @@ pip install -e ".[dev]"
 python -m pytest
 ```
 
-## Demo pipeline
-
-```powershell
-python scripts/generate_demo_data.py
-python scripts/validate_dataset.py data/demo/wifi_events.csv
-python scripts/train_benchmark.py data/demo/wifi_events.csv
-```
-
-## AWID3-shaped research smoke test
-
-This fixture has the same selected column structure but is still synthetic:
+## v0.5 smoke run
 
 ```powershell
 python scripts/generate_awid3_fixture.py
-python scripts/inspect_awid3.py data/demo/awid3_fixture.csv
-python scripts/train_awid3.py data/demo/awid3_fixture.csv
+python scripts/run_v05_research.py data/demo/awid3_fixture.csv
+```
+
+Generated outputs are written to:
+
+```text
+artifacts/v05/
+├── models/
+├── experiments/
+├── registry/
+│   ├── registry.json
+│   └── models/
+├── research_report.json
+└── research_report.md
+```
+
+## Enable SHAP
+
+```powershell
+pip install -e ".[dev,explain]"
+python scripts/run_v05_research.py data/demo/awid3_fixture.csv --shap
+```
+
+## Enable MLflow
+
+```powershell
+pip install -e ".[dev,mlops]"
+python scripts/run_v05_research.py data/demo/awid3_fixture.csv --mlflow
+python scripts/mlflow_info.py
+```
+
+MLflow uses a local SQLite-backed tracking/registry store. This keeps model
+lineage, versions, aliases and run metrics inspectable through MLflow.
+
+## Full research extras
+
+```powershell
+pip install -e ".[dev,full]"
+```
+
+Then:
+
+```powershell
+python scripts/run_v05_research.py data/demo/awid3_fixture.csv --shap --mlflow
 ```
 
 ## Real AWID3 workflow
 
-After obtaining an AWID3 CSV according to the dataset owner's terms:
+After obtaining an AWID3 CSV under the dataset owner's terms:
 
 ```powershell
 python scripts/inspect_awid3.py "C:\path\to\AWID3.csv"
-python scripts/train_awid3.py "C:\path\to\AWID3.csv"
+python scripts/run_v05_research.py "C:\path\to\AWID3.csv"
 ```
 
-See `docs/awid3.md`.
+Add `--shap` and/or `--mlflow` after installing the relevant extras.
 
 ## API
 
@@ -94,15 +104,32 @@ See `docs/awid3.md`.
 python -m uvicorn vantawave.api.main:app --reload
 ```
 
-Then open:
+Useful v0.5 endpoints:
 
-`http://127.0.0.1:8000/docs`
+- `/mlops/capabilities`
+- `/registry/models`
+- `/experiments`
+- `/promotion/policy`
+- `/research/awid3/schema`
+- `/models`
+- `/risk/score`
+- `/docs`
+
+## Promotion policy
+
+Default candidate requirements:
+
+- test F1 >= 0.80;
+- test PR-AUC >= 0.85;
+- test FPR <= 0.10;
+- validation/test F1 gap <= 0.10.
+
+These are explicit engineering defaults, not universal cybersecurity rules.
 
 ## Research integrity
 
-Synthetic metrics are **not** real-world Wi‑Fi IDS results. Real performance
-claims require actual external research data or authorized lab captures.
+Threshold selection is performed on the validation set. The resulting
+threshold is frozen before final test evaluation.
 
-The project deliberately keeps preprocessing inside trainable pipelines and
-maintains a separate test set so that test results are not used as model
-selection criteria.
+Synthetic fixture metrics only validate the pipeline. They are not real-world
+Wi‑Fi IDS performance claims.

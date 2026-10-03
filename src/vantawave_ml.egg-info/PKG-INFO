@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: vantawave-ml
-Version: 0.4.0
-Summary: Wi-Fi security, machine-learning and AI research platform
+Version: 0.5.0
+Summary: Wi-Fi security, machine-learning, MLOps and AI research platform
 Requires-Python: >=3.11
 Requires-Dist: numpy>=2.0
 Requires-Dist: pandas>=2.2
@@ -17,8 +17,14 @@ Requires-Dist: ruff>=0.6; extra == "dev"
 Requires-Dist: httpx>=0.27; extra == "dev"
 Provides-Extra: research
 Requires-Dist: pyarrow>=17; extra == "research"
-Requires-Dist: mlflow>=3.0; extra == "research"
+Provides-Extra: mlops
+Requires-Dist: mlflow>=3.0; extra == "mlops"
 Provides-Extra: boosting
 Requires-Dist: catboost>=1.2; extra == "boosting"
 Provides-Extra: explain
 Requires-Dist: shap>=0.46; extra == "explain"
+Provides-Extra: full
+Requires-Dist: pyarrow>=17; extra == "full"
+Requires-Dist: mlflow>=3.0; extra == "full"
+Requires-Dist: catboost>=1.2; extra == "full"
+Requires-Dist: shap>=0.46; extra == "full"

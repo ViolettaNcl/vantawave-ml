@@ -1,9 +1,9 @@
 # VantaWave ML Roadmap
 
 ## v0.1 — Foundation
-- [x] Python package
-- [x] FastAPI skeleton
-- [x] authorized target scope
+- [x] package structure
+- [x] FastAPI
+- [x] authorized target guard
 - [x] Isolation Forest baseline
 
 ## v0.2 — Runnable ML Demo
@@ -14,55 +14,71 @@
 ## v0.3 — Data & ML Core
 - [x] data validation
 - [x] supervised baselines
-- [x] anomaly detection
 - [x] model benchmark
 - [x] Risk Engine
 - [x] CI
 
 ## v0.4 — Research Dataset & Evaluation
-- [x] AWID3 research adapter
-- [x] expert 802.11 feature set
-- [x] dataset profile
-- [x] leakage-name audit
-- [x] preprocessing pipelines
-- [x] train/validation/test discipline
-- [x] held-out test metrics
+- [x] AWID3 adapter
+- [x] leakage checks
+- [x] train/validation/test
+- [x] held-out evaluation
 - [x] permutation importance
-- [x] optional MLflow adapter
-- [x] research reports
-- [x] research CI smoke test
+- [x] research report
 
-## v0.5 — MLOps + Explainability
-- [ ] native MLflow run logging
-- [ ] experiment/model registry metadata
-- [ ] SHAP explanations
-- [ ] threshold calibration
-- [ ] error-analysis reports
-- [ ] model comparison promotion policy
+## v0.5 — MLOps, Calibration & Promotion
+- [x] threshold calibration
+- [x] calibrated test metrics
+- [x] false-positive / false-negative analysis
+- [x] local model registry
+- [x] model versions + SHA-256 lineage
+- [x] candidate/champion promotion
+- [x] optional MLflow tracking
+- [x] optional MLflow Model Registry
+- [x] optional SHAP TreeExplainer
+- [x] richer JSON + Markdown reports
+- [x] expanded MLOps API
 
 ## v0.6 — Deep Anomaly Detection
 - [ ] PyTorch autoencoder
-- [ ] anomaly calibration
-- [ ] unknown-behavior evaluation
+- [ ] normal-only training
+- [ ] anomaly threshold calibration
+- [ ] known vs unknown anomaly evaluation
+- [ ] reconstruction-error analysis
 - [ ] drift baseline
 
 ## v0.7 — Passive Wi‑Fi Sensor
-- [ ] hardware/sensor abstraction
-- [ ] passive telemetry
-- [ ] event normalization
-- [ ] rolling-window feature builder
+- [ ] sensor abstraction
+- [ ] passive telemetry ingestion
+- [ ] 802.11 event normalization
+- [ ] rolling windows
+- [ ] feature builder
+- [ ] hardware compatibility layer
 
 ## v0.8 — Authorized Lab
 - [ ] registered AP workflow
 - [ ] lab sessions
-- [ ] before/after telemetry comparison
-- [ ] automatic incidents
+- [ ] controlled before/after experiments
+- [ ] automated incidents
+- [ ] detector comparison
 
-## v0.9+ — Productization
-- [ ] model monitoring/drift
-- [ ] PostgreSQL
-- [ ] grounded AI Security Analyst + RAG
-- [ ] Docker
-- [ ] production API
+## v0.9 — Monitoring & Data Platform
+- [ ] feature drift
+- [ ] prediction drift
+- [ ] PostgreSQL metadata store
+- [ ] scheduled model evaluation
+- [ ] retraining policy
+
+## v0.10 — AI Security Analyst
+- [ ] grounded RAG
+- [ ] incident explanation
+- [ ] evidence citations
+- [ ] historical incident retrieval
+- [ ] restricted security agent workflows
+
+## v0.11+ — Productization
+- [ ] Docker / compose
+- [ ] production API hardening
 - [ ] professional SOC dashboard
-- [ ] v1.0 portfolio release
+- [ ] visualization layer
+- [ ] portfolio release v1.0
