@@ -6,17 +6,15 @@ on:
   pull_request:
 
 jobs:
-  test:
+  base:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: Install
+      - name: Install base
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
@@ -27,14 +25,48 @@ jobs:
       - name: Tests
         run: python -m pytest
 
-      - name: Demo pipeline
-        run: |
-          python scripts/generate_demo_data.py
-          python scripts/validate_dataset.py data/demo/wifi_events.csv
-          python scripts/train_benchmark.py data/demo/wifi_events.csv
-
-      - name: AWID3 v0.5 lifecycle smoke test
+      - name: Classical lifecycle smoke test
         run: |
           python scripts/generate_awid3_fixture.py
-          python scripts/inspect_awid3.py data/demo/awid3_fixture.csv
           python scripts/run_v05_research.py data/demo/awid3_fixture.csv
+
+      - name: Normalized sensor smoke test
+        run: |
+          python scripts/sensor_capabilities.py
+          python scripts/generate_sensor_fixture.py
+          python scripts/replay_wifi_events.py data/demo/sensor_events.jsonl
+
+  deep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install deep stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,deep]"
+
+      - name: Deep anomaly smoke test
+        run: |
+          python scripts/generate_awid3_fixture.py
+          python scripts/run_v06_deep.py data/demo/awid3_fixture.csv
+
+  pcap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install PCAP stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,pcap]"
+
+      - name: Sensor tests
+        run: |
+          python -m pytest tests/test_pcap_helpers.py tests/test_sensor_window.py tests/test_sensor_storage.py

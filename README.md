@@ -1,102 +1,167 @@
 # VantaWave ML
 
-**Wi‑Fi Security, Machine Learning, MLOps & AI Research Platform**
+**Wi‑Fi Security, Passive Telemetry, Machine Learning, Deep Anomaly Detection, MLOps & AI Research Platform**
 
 VantaWave ML is an independent portfolio/research project that combines
-wireless-security data engineering, supervised ML, anomaly detection,
-threshold calibration, model evaluation, experiment tracking, model registry,
-explainability, risk analysis and — in later versions — passive telemetry,
-authorized lab validation, grounded AI analysis and a SOC-style interface.
+wireless telemetry, data engineering, classical ML, deep anomaly detection,
+MLOps, explainability, risk analysis and — in later releases — authorized
+lab validation, persistent monitoring, grounded AI analysis and a SOC-style
+interface.
 
-## v0.5 — MLOps, Calibration, Explainability & Promotion
+## v0.7 — Passive Wi‑Fi Sensor Layer
 
-This release turns the v0.4 research pipeline into a model-lifecycle workflow.
+v0.7 moves VantaWave from dataset-only experiments toward real telemetry.
 
-### New in v0.5
+### New in v0.7
 
-- validation-only threshold calibration;
-- calibrated held-out test evaluation;
-- false-positive / false-negative error analysis;
-- transparent promotion policy;
-- local model registry with versions, SHA-256 and aliases;
-- `candidate` / `champion` model lifecycle;
-- optional MLflow tracking and Model Registry;
-- optional SHAP TreeExplainer support;
-- richer JSON + Markdown research reports;
-- local MLflow SQLite configuration;
-- expanded MLOps API endpoints;
-- expanded automated tests.
+- normalized `WirelessEvent` schema;
+- Windows WLAN discovery adapter using the operating system's `netsh` interface;
+- English/Russian `netsh` parser;
+- SSID/BSSID/channel/security/signal observations;
+- host capability detection;
+- JSONL event/session storage;
+- rolling event windows;
+- live feature aggregation;
+- network inventory and AP-change detection;
+- offline JSONL replay;
+- optional offline 802.11 PCAP/PCAPNG replay through Scapy;
+- Dot11 event classification for beacon/auth/association/deauth/disassoc/data frames;
+- channel/frequency normalization;
+- sensor CLI tools;
+- sensor API endpoints;
+- CI sensor smoke test;
+- expanded automated test suite.
 
-## Install — base development
+## Important distinction
+
+`WindowsNetshSensor` is **OS-level WLAN discovery**, not raw monitor-mode
+802.11 capture. The Windows WLAN stack may control how scanning occurs.
+
+v0.7 does **not** implement:
+
+- packet injection;
+- deauthentication transmission;
+- active wireless attacks;
+- raw live monitor-mode frame capture.
+
+Raw frame-level data is supported only through **offline PCAP replay** in this
+release. Hardware/driver-specific live 802.11 capture is deferred to the
+authorized-lab phase.
+
+## Install
 
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-pip install -e ".[dev]"
+pip install -e ".[dev,deep]"
 python -m pytest
 ```
 
-## v0.5 smoke run
+## Check sensor capabilities
 
 ```powershell
-python scripts/generate_awid3_fixture.py
-python scripts/run_v05_research.py data/demo/awid3_fixture.csv
+python scripts/sensor_capabilities.py
 ```
 
-Generated outputs are written to:
+On Windows this reports whether `netsh` WLAN discovery is available.
+
+## Run one Windows WLAN discovery scan
+
+```powershell
+python scripts/scan_wifi.py --once
+```
+
+Example event fields:
 
 ```text
-artifacts/v05/
-├── models/
-├── experiments/
-├── registry/
-│   ├── registry.json
-│   └── models/
-├── research_report.json
-└── research_report.md
+event_type
+timestamp
+source
+ssid
+bssid
+channel
+signal_percent
+estimated rssi_dbm
+security
+radio_type
 ```
 
-## Enable SHAP
+The `rssi_dbm` value derived from Windows signal quality is explicitly marked
+as an estimate in event metadata.
+
+## Record a sensor session
 
 ```powershell
-pip install -e ".[dev,explain]"
-python scripts/run_v05_research.py data/demo/awid3_fixture.csv --shap
+python scripts/scan_wifi.py --duration 30 --interval 5 --window 60
 ```
 
-## Enable MLflow
+Generated files:
+
+```text
+artifacts/sensors/live/
+├── events.jsonl
+├── features.jsonl
+├── inventory.json
+├── inventory_changes.jsonl
+└── session.json
+```
+
+## Replay stored events
 
 ```powershell
-pip install -e ".[dev,mlops]"
-python scripts/run_v05_research.py data/demo/awid3_fixture.csv --mlflow
-python scripts/mlflow_info.py
+python scripts/replay_wifi_events.py artifacts/sensors/live/events.jsonl --window 60
 ```
 
-MLflow uses a local SQLite-backed tracking/registry store. This keeps model
-lineage, versions, aliases and run metrics inspectable through MLflow.
+## Normalized sensor fixture
 
-## Full research extras
+For a completely reproducible test:
 
 ```powershell
-pip install -e ".[dev,full]"
+python scripts/generate_sensor_fixture.py
+python scripts/replay_wifi_events.py data/demo/sensor_events.jsonl
 ```
 
-Then:
+## Offline 802.11 PCAP replay
+
+Install Scapy:
 
 ```powershell
-python scripts/run_v05_research.py data/demo/awid3_fixture.csv --shap --mlflow
+pip install -e ".[dev,pcap]"
 ```
 
-## Real AWID3 workflow
-
-After obtaining an AWID3 CSV under the dataset owner's terms:
+Then analyze an **authorized/offline** Wi‑Fi capture:
 
 ```powershell
-python scripts/inspect_awid3.py "C:\path\to\AWID3.csv"
-python scripts/run_v05_research.py "C:\path\to\AWID3.csv"
+python scripts/inspect_pcap.py "C:\path\to\capture.pcapng"
 ```
 
-Add `--shap` and/or `--mlflow` after installing the relevant extras.
+VantaWave extracts normalized events and aggregates them into rolling-style
+features. No packets are transmitted.
+
+## Rolling feature layer
+
+Current window features include:
+
+- total event rate;
+- authentication rate;
+- association rate;
+- deauthentication rate;
+- disassociation rate;
+- beacon rate;
+- data rate;
+- AP observation rate;
+- unique BSSIDs;
+- unique transmitters;
+- unique SSIDs;
+- RSSI mean/std;
+- Windows signal-quality mean;
+- retry ratio;
+- channel count.
+
+A compatibility projection to the earlier 10-feature ML schema exists for
+research experiments, but live telemetry should **not** be fed into a model
+trained on unrelated synthetic data and presented as a real prediction.
 
 ## API
 
@@ -104,32 +169,36 @@ Add `--shap` and/or `--mlflow` after installing the relevant extras.
 python -m uvicorn vantawave.api.main:app --reload
 ```
 
-Useful v0.5 endpoints:
+Open:
 
-- `/mlops/capabilities`
-- `/registry/models`
-- `/experiments`
-- `/promotion/policy`
-- `/research/awid3/schema`
-- `/models`
-- `/risk/score`
-- `/docs`
+`http://127.0.0.1:8000/docs`
 
-## Promotion policy
+New v0.7 endpoints:
 
-Default candidate requirements:
+- `GET /sensors/capabilities`
+- `GET /sensors/schema`
+- `GET /sensors/windows/scan`
 
-- test F1 >= 0.80;
-- test PR-AUC >= 0.85;
-- test FPR <= 0.10;
-- validation/test F1 gap <= 0.10.
+Existing ML/MLOps endpoints remain available.
 
-These are explicit engineering defaults, not universal cybersecurity rules.
+## Previous layers retained
+
+v0.7 still includes:
+
+- AWID3-oriented research pipeline;
+- threshold calibration;
+- error analysis;
+- local model registry;
+- model promotion;
+- optional MLflow;
+- SHAP;
+- PyTorch Autoencoder;
+- Isolation Forest;
+- known/unknown anomaly evaluation;
+- drift-baseline foundation.
 
 ## Research integrity
 
-Threshold selection is performed on the validation set. The resulting
-threshold is frozen before final test evaluation.
-
-Synthetic fixture metrics only validate the pipeline. They are not real-world
-Wi‑Fi IDS performance claims.
+OS-visible Wi‑Fi discovery and offline PCAP replay are not equivalent to
+monitor-mode capture. VantaWave records the collection mode explicitly so
+later reports can distinguish data provenance.

@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "0.5.0"
+    assert body["version"] == "0.7.0"
 
 
 def test_health():
@@ -78,3 +78,27 @@ def test_experiments_empty_without_artifacts(tmp_path, monkeypatch):
     response = client.get("/experiments")
     assert response.status_code == 200
     assert response.json() == {"runs": []}
+
+
+def test_deep_capabilities():
+    response = client.get("/deep/capabilities")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["normal_only_training"] is True
+    assert body["known_unknown_attack_evaluation"] is True
+
+
+def test_sensor_schema():
+    response = client.get("/sensors/schema")
+    assert response.status_code == 200
+    body = response.json()
+    assert "ap_observation" in body["event_types"]
+    assert body["live_raw_80211_capture"] is False
+
+
+def test_sensor_capabilities():
+    response = client.get("/sensors/capabilities")
+    assert response.status_code == 200
+    body = response.json()
+    assert "host" in body
+    assert "adapters" in body

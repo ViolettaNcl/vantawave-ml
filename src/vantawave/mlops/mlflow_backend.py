@@ -26,6 +26,14 @@ def _require_mlflow():
     return mlflow, MlflowClient
 
 
+
+def sklearn_log_options(mlflow):
+    return {
+        "serialization_format": mlflow.sklearn.SERIALIZATION_FORMAT_SKOPS,
+        "skops_trusted_types": ["numpy.dtype"],
+    }
+
+
 def configure_local_mlflow(
     *,
     root: str | Path = "artifacts/mlflow",
@@ -76,6 +84,7 @@ def log_and_register_sklearn(
             sk_model=model,
             name="model",
             registered_model_name=model_name,
+            **sklearn_log_options(mlflow),
         )
 
         versions = client.search_model_versions(f"name='{model_name}'")

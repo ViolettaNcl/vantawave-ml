@@ -30,15 +30,24 @@ For each development step:
 
 ## Current baseline
 
-v0.5 includes the AWID3 research pipeline, threshold calibration, error
-analysis, local model registry, explicit promotion policy, optional MLflow
-Model Registry integration, optional SHAP explainability and rich reports.
+v0.7 adds the passive telemetry architecture:
 
-Future releases must preserve the following rules:
+- normalized `WirelessEvent` schema;
+- Windows OS-visible WLAN discovery;
+- offline PCAP replay;
+- JSONL sensor sessions;
+- rolling feature windows;
+- network inventory/change detection;
+- explicit collection provenance.
 
-- no threshold selection on the test set;
-- no silent promotion of the newest model;
-- promotion criteria must remain explicit and auditable;
-- model versions must retain lineage/metrics;
-- SHAP explains model behavior but does not replace evaluation;
-- synthetic fixture results must never be presented as real-world IDS results.
+Future releases must preserve these rules:
+
+- sensor adapters stay separate from ML models;
+- every event records source/collection provenance;
+- OS WLAN discovery must not be mislabeled as raw monitor-mode capture;
+- live telemetry must not be fed into unrelated synthetic models and presented
+  as validated predictions;
+- packet injection and active attack automation remain outside the passive
+  sensor layer;
+- raw live 802.11 capture, when added, belongs only to the authorized-lab
+  workflow and must require explicitly registered equipment.

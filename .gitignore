@@ -19,3 +19,6 @@ data/processed/
 data/demo/awid3_fixture.csv
 mlruns/
 *.db
+*.pt
+*.egg-info/
+data/demo/sensor_events.jsonl

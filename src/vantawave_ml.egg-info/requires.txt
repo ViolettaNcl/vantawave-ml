@@ -10,6 +10,9 @@ pyyaml>=6.0
 [boosting]
 catboost>=1.2
 
+[deep]
+torch>=2.7
+
 [dev]
 pytest>=8.0
 ruff>=0.6
@@ -23,9 +26,14 @@ pyarrow>=17
 mlflow>=3.0
 catboost>=1.2
 shap>=0.46
+torch>=2.7
+scapy>=2.6
 
 [mlops]
 mlflow>=3.0
+
+[pcap]
+scapy>=2.6
 
 [research]
 pyarrow>=17
