@@ -1,7 +1,7 @@
 Metadata-Version: 2.4
 Name: vantawave-ml
-Version: 0.7.0
-Summary: Wi-Fi security, passive telemetry, ML, deep anomaly detection, MLOps and AI research platform
+Version: 0.9.0
+Summary: Wi-Fi security, monitoring, persistent data, ML, MLOps and AI research platform
 Requires-Python: >=3.11
 Requires-Dist: numpy>=2.0
 Requires-Dist: pandas>=2.2
@@ -11,6 +11,8 @@ Requires-Dist: fastapi>=0.115
 Requires-Dist: uvicorn>=0.30
 Requires-Dist: pydantic>=2.8
 Requires-Dist: pyyaml>=6.0
+Requires-Dist: SQLAlchemy<2.1,>=2.0.54
+Requires-Dist: alembic<2,>=1.20
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 Requires-Dist: ruff>=0.6; extra == "dev"
@@ -27,6 +29,8 @@ Provides-Extra: deep
 Requires-Dist: torch>=2.7; extra == "deep"
 Provides-Extra: pcap
 Requires-Dist: scapy>=2.6; extra == "pcap"
+Provides-Extra: postgres
+Requires-Dist: psycopg[binary]<4,>=3.2; extra == "postgres"
 Provides-Extra: full
 Requires-Dist: pyarrow>=17; extra == "full"
 Requires-Dist: mlflow>=3.0; extra == "full"
@@ -34,3 +38,4 @@ Requires-Dist: catboost>=1.2; extra == "full"
 Requires-Dist: shap>=0.46; extra == "full"
 Requires-Dist: torch>=2.7; extra == "full"
 Requires-Dist: scapy>=2.6; extra == "full"
+Requires-Dist: psycopg[binary]<4,>=3.2; extra == "full"

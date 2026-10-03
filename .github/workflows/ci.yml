@@ -30,6 +30,12 @@ jobs:
           python scripts/generate_awid3_fixture.py
           python scripts/run_v05_research.py data/demo/awid3_fixture.csv
 
+      - name: Database migration smoke test
+        run: |
+          alembic upgrade head
+          python scripts/db_demo.py
+          python scripts/monitor_demo.py
+
       - name: Normalized sensor smoke test
         run: |
           python scripts/sensor_capabilities.py

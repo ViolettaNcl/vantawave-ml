@@ -30,24 +30,14 @@ For each development step:
 
 ## Current baseline
 
-v0.7 adds the passive telemetry architecture:
+v0.9 includes the Authorized Lab plus a persistent SQLAlchemy data platform,
+SQLite/PostgreSQL support, Alembic migrations, feature/anomaly-score drift,
+persistent evaluations and retraining recommendations.
 
-- normalized `WirelessEvent` schema;
-- Windows OS-visible WLAN discovery;
-- offline PCAP replay;
-- JSONL sensor sessions;
-- rolling feature windows;
-- network inventory/change detection;
-- explicit collection provenance.
+Future releases must preserve:
 
-Future releases must preserve these rules:
-
-- sensor adapters stay separate from ML models;
-- every event records source/collection provenance;
-- OS WLAN discovery must not be mislabeled as raw monitor-mode capture;
-- live telemetry must not be fed into unrelated synthetic models and presented
-  as validated predictions;
-- packet injection and active attack automation remain outside the passive
-  sensor layer;
-- raw live 802.11 capture, when added, belongs only to the authorized-lab
-  workflow and must require explicitly registered equipment.
+- storage abstraction compatible with SQLite and PostgreSQL;
+- schema changes through migrations;
+- retraining recommendations with explicit recorded reasons;
+- drift events are monitoring evidence, not automatic proof of attacks;
+- AI layers must read persisted evidence rather than fabricate facts.

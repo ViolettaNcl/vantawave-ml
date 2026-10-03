@@ -11,6 +11,8 @@ from vantawave.data.awid3 import (
 from vantawave.data.schema import FEATURE_COLUMNS
 from vantawave.experiments.store import FileExperimentStore
 from vantawave.ml.promotion.policy import PromotionPolicy
+from vantawave.lab.registry import AuthorizedTargetRegistry
+from vantawave.lab.sessions import LabSessionStore
 from vantawave.registry.local import LocalModelRegistry
 from vantawave.risk.engine import RiskInput, calculate_risk
 from vantawave.sensors.adapters.windows_netsh import WindowsNetshSensor
@@ -20,7 +22,7 @@ from vantawave.sensors.features.window import WindowFeatures
 
 app = FastAPI(
     title="VantaWave ML",
-    version="0.7.0",
+    version="0.9.0",
     description="Wi-Fi telemetry, ML, deep anomaly detection, MLOps and AI research platform.",
 )
 
@@ -29,7 +31,7 @@ app = FastAPI(
 def root():
     return {
         "project": "VantaWave ML",
-        "version": "0.7.0",
+        "version": "0.9.0",
         "status": "running",
         "docs": "/docs",
         "health": "/health",
@@ -39,7 +41,7 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "project": "VantaWave ML", "version": "0.7.0"}
+    return {"status": "ok", "project": "VantaWave ML", "version": "0.9.0"}
 
 
 @app.get("/features")
@@ -95,6 +97,8 @@ def mlops_capabilities():
         "model_promotion": True,
         "deep_anomaly_detection": True,
         "drift_baseline": True,
+        "persistent_monitoring": True,
+        "database_layer": True,
     }
 
 
@@ -161,6 +165,95 @@ def windows_sensor_scan():
         "count": len(events),
         "events": [event.to_dict() for event in events],
     }
+
+
+@app.get("/lab/targets")
+def lab_targets():
+    return {"targets": AuthorizedTargetRegistry().list_targets()}
+
+
+@app.get("/lab/sessions")
+def lab_sessions():
+    return {"sessions": LabSessionStore().list_sessions()}
+
+
+@app.get("/lab/capabilities")
+def lab_capabilities():
+    return {
+        "authorized_target_registry": True,
+        "session_lifecycle": True,
+        "before_after_comparison": True,
+        "evidence_hashing": "sha256",
+        "incident_generation": True,
+        "active_attack_automation": False,
+    }
+
+
+@app.get("/data/capabilities")
+def data_capabilities():
+    from importlib.util import find_spec
+
+    return {
+        "sqlalchemy": find_spec("sqlalchemy") is not None,
+        "alembic": find_spec("alembic") is not None,
+        "psycopg": find_spec("psycopg") is not None,
+        "sqlite_default": True,
+        "postgresql_ready": True,
+        "database_env_var": "VANTAWAVE_DATABASE_URL",
+    }
+
+
+@app.get("/monitoring/policy")
+def monitoring_policy():
+    from vantawave.monitoring.policy import EvaluationPolicy
+
+    return EvaluationPolicy().to_dict()
+
+
+@app.get("/db/health")
+def database_health():
+    if find_spec("sqlalchemy") is None:
+        raise HTTPException(
+            status_code=503,
+            detail='Database extra is not installed. Use: pip install -e ".[database]"',
+        )
+    from sqlalchemy import text as sql_text
+    from vantawave.db.config import load_database_config
+    from vantawave.db.session import create_db_engine
+
+    config = load_database_config()
+    engine = create_db_engine(config)
+    try:
+        with engine.connect() as connection:
+            connection.execute(sql_text("SELECT 1"))
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    return {
+        "status": "ok",
+        "url_scheme": config.url.split(":", 1)[0],
+        "postgresql": config.is_postgresql,
+    }
+
+
+@app.get("/monitoring/recent")
+def monitoring_recent():
+    if find_spec("sqlalchemy") is None:
+        raise HTTPException(
+            status_code=503,
+            detail='Database extra is not installed. Use: pip install -e ".[database]"',
+        )
+    from vantawave.db.init import initialize_database
+    from vantawave.db.repositories import DriftRepository, EvaluationRepository
+    from vantawave.db.serialization import orm_to_dict
+    from vantawave.db.session import create_session_factory, session_scope
+
+    engine = initialize_database()
+    factory = create_session_factory(engine)
+    with session_scope(factory) as db:
+        drift = [orm_to_dict(x) for x in DriftRepository(db).list()[:50]]
+        evaluations = [orm_to_dict(x) for x in EvaluationRepository(db).list()[:20]]
+    return {"drift_events": drift, "evaluations": evaluations}
 
 
 @app.get("/registry/models")

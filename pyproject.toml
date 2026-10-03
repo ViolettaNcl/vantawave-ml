@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vantawave-ml"
-version = "0.7.0"
-description = "Wi-Fi security, passive telemetry, ML, deep anomaly detection, MLOps and AI research platform"
+version = "0.9.0"
+description = "Wi-Fi security, monitoring, persistent data, ML, MLOps and AI research platform"
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=2.0",
@@ -16,20 +16,21 @@ dependencies = [
   "uvicorn>=0.30",
   "pydantic>=2.8",
   "pyyaml>=6.0",
+  "SQLAlchemy>=2.0.54,<2.1",
+  "alembic>=1.20,<2",
 ]
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=8.0",
-  "ruff>=0.6",
-  "httpx>=0.27",
-]
+dev = ["pytest>=8.0", "ruff>=0.6", "httpx>=0.27"]
 research = ["pyarrow>=17"]
 mlops = ["mlflow>=3.0"]
 boosting = ["catboost>=1.2"]
 explain = ["shap>=0.46"]
 deep = ["torch>=2.7"]
 pcap = ["scapy>=2.6"]
+postgres = [
+  "psycopg[binary]>=3.2,<4",
+]
 full = [
   "pyarrow>=17",
   "mlflow>=3.0",
@@ -37,6 +38,7 @@ full = [
   "shap>=0.46",
   "torch>=2.7",
   "scapy>=2.6",
+  "psycopg[binary]>=3.2,<4",
 ]
 
 [tool.setuptools.packages.find]

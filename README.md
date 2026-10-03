@@ -1,167 +1,115 @@
 # VantaWave ML
 
-**Wi‑Fi Security, Passive Telemetry, Machine Learning, Deep Anomaly Detection, MLOps & AI Research Platform**
+**Wi‑Fi Security, Passive Telemetry, Authorized Lab, Monitoring, Persistent Data, ML, MLOps & AI Research Platform**
 
-VantaWave ML is an independent portfolio/research project that combines
-wireless telemetry, data engineering, classical ML, deep anomaly detection,
-MLOps, explainability, risk analysis and — in later releases — authorized
-lab validation, persistent monitoring, grounded AI analysis and a SOC-style
-interface.
+## v0.9 — Monitoring & Data Platform
 
-## v0.7 — Passive Wi‑Fi Sensor Layer
+v0.9 turns VantaWave into a persistent system instead of a collection of
+ephemeral experiment files.
 
-v0.7 moves VantaWave from dataset-only experiments toward real telemetry.
+### New in v0.9
 
-### New in v0.7
+- SQLAlchemy 2.x ORM data layer;
+- SQLite default database for zero-config local development;
+- PostgreSQL-ready configuration through `VANTAWAVE_DATABASE_URL`;
+- Psycopg 3 optional PostgreSQL driver;
+- Alembic migrations;
+- persistent lab targets;
+- persistent sensor/lab sessions;
+- persistent incidents;
+- persistent drift events;
+- persistent model snapshots;
+- persistent evaluation runs;
+- anomaly-score drift monitoring;
+- feature drift monitoring;
+- scheduled evaluation policy;
+- retraining recommendations;
+- file-state → database import utility;
+- database and monitoring API endpoints.
 
-- normalized `WirelessEvent` schema;
-- Windows WLAN discovery adapter using the operating system's `netsh` interface;
-- English/Russian `netsh` parser;
-- SSID/BSSID/channel/security/signal observations;
-- host capability detection;
-- JSONL event/session storage;
-- rolling event windows;
-- live feature aggregation;
-- network inventory and AP-change detection;
-- offline JSONL replay;
-- optional offline 802.11 PCAP/PCAPNG replay through Scapy;
-- Dot11 event classification for beacon/auth/association/deauth/disassoc/data frames;
-- channel/frequency normalization;
-- sensor CLI tools;
-- sensor API endpoints;
-- CI sensor smoke test;
-- expanded automated test suite.
-
-## Important distinction
-
-`WindowsNetshSensor` is **OS-level WLAN discovery**, not raw monitor-mode
-802.11 capture. The Windows WLAN stack may control how scanning occurs.
-
-v0.7 does **not** implement:
-
-- packet injection;
-- deauthentication transmission;
-- active wireless attacks;
-- raw live monitor-mode frame capture.
-
-Raw frame-level data is supported only through **offline PCAP replay** in this
-release. Hardware/driver-specific live 802.11 capture is deferred to the
-authorized-lab phase.
-
-## Install
+## Install database support
 
 ```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -e ".[dev,deep]"
-python -m pytest
+pip install -e ".[dev]"
 ```
 
-## Check sensor capabilities
+For PostgreSQL:
 
 ```powershell
-python scripts/sensor_capabilities.py
+pip install -e ".[dev,postgres]"
 ```
 
-On Windows this reports whether `netsh` WLAN discovery is available.
-
-## Run one Windows WLAN discovery scan
+## Initialize local SQLite database
 
 ```powershell
-python scripts/scan_wifi.py --once
+python scripts/init_database.py
 ```
 
-Example event fields:
+Default file:
 
 ```text
-event_type
-timestamp
-source
-ssid
-bssid
-channel
-signal_percent
-estimated rssi_dbm
-security
-radio_type
+artifacts/v09/vantawave.db
 ```
 
-The `rssi_dbm` value derived from Windows signal quality is explicitly marked
-as an estimate in event metadata.
-
-## Record a sensor session
+## Run database demo
 
 ```powershell
-python scripts/scan_wifi.py --duration 30 --interval 5 --window 60
+python scripts/db_demo.py
 ```
 
-Generated files:
-
-```text
-artifacts/sensors/live/
-├── events.jsonl
-├── features.jsonl
-├── inventory.json
-├── inventory_changes.jsonl
-└── session.json
-```
-
-## Replay stored events
+## Run monitoring demo
 
 ```powershell
-python scripts/replay_wifi_events.py artifacts/sensors/live/events.jsonl --window 60
+python scripts/monitor_demo.py
 ```
 
-## Normalized sensor fixture
+The monitoring demo evaluates:
 
-For a completely reproducible test:
+- numeric feature drift;
+- categorical distribution drift;
+- anomaly-score drift;
+- current F1/FPR;
+- retraining policy.
+
+It then persists drift events and an evaluation run.
+
+## Switch to PostgreSQL
+
+Set:
 
 ```powershell
-python scripts/generate_sensor_fixture.py
-python scripts/replay_wifi_events.py data/demo/sensor_events.jsonl
+$env:VANTAWAVE_DATABASE_URL="postgresql+psycopg://user:password@localhost:5432/vantawave"
 ```
 
-## Offline 802.11 PCAP replay
-
-Install Scapy:
+Then run:
 
 ```powershell
-pip install -e ".[dev,pcap]"
+alembic upgrade head
 ```
 
-Then analyze an **authorized/offline** Wi‑Fi capture:
+VantaWave uses the same SQLAlchemy models for SQLite and PostgreSQL.
+
+## Migrations
+
+Initialize/update schema:
 
 ```powershell
-python scripts/inspect_pcap.py "C:\path\to\capture.pcapng"
+alembic upgrade head
 ```
 
-VantaWave extracts normalized events and aggregates them into rolling-style
-features. No packets are transmitted.
+See current revision:
 
-## Rolling feature layer
+```powershell
+alembic current
+```
 
-Current window features include:
+## Import v0.8 file state
 
-- total event rate;
-- authentication rate;
-- association rate;
-- deauthentication rate;
-- disassociation rate;
-- beacon rate;
-- data rate;
-- AP observation rate;
-- unique BSSIDs;
-- unique transmitters;
-- unique SSIDs;
-- RSSI mean/std;
-- Windows signal-quality mean;
-- retry ratio;
-- channel count.
+If you already created file-backed lab targets/sessions:
 
-A compatibility projection to the earlier 10-feature ML schema exists for
-research experiments, but live telemetry should **not** be fed into a model
-trained on unrelated synthetic data and presented as a real prediction.
+```powershell
+python scripts/import_file_state_to_db.py
+```
 
 ## API
 
@@ -169,36 +117,52 @@ trained on unrelated synthetic data and presented as a real prediction.
 python -m uvicorn vantawave.api.main:app --reload
 ```
 
-Open:
+New endpoints include:
 
-`http://127.0.0.1:8000/docs`
+- `GET /data/capabilities`
+- `GET /db/health`
+- `GET /monitoring/policy`
+- `GET /monitoring/recent`
 
-New v0.7 endpoints:
+All previous sensor, lab, ML, registry and experiment endpoints remain.
 
-- `GET /sensors/capabilities`
-- `GET /sensors/schema`
-- `GET /sensors/windows/scan`
+## Monitoring policy
 
-Existing ML/MLOps endpoints remain available.
+Current default triggers include:
 
-## Previous layers retained
+- high feature/anomaly-score drift;
+- repeated warning-level drift;
+- F1 below minimum;
+- false-positive rate above maximum.
 
-v0.7 still includes:
+The output is an explicit recommendation:
 
-- AWID3-oriented research pipeline;
-- threshold calibration;
-- error analysis;
-- local model registry;
-- model promotion;
-- optional MLflow;
-- SHAP;
-- PyTorch Autoencoder;
-- Isolation Forest;
-- known/unknown anomaly evaluation;
-- drift-baseline foundation.
+- `keep_current_model`
+- `retrain`
+
+with auditable reasons.
+
+## Architecture after v0.9
+
+```text
+Passive Sensor / Dataset
+        ↓
+Normalized Telemetry
+        ↓
+Feature Windows
+        ↓
+ML / Deep Anomaly Detection
+        ↓
+Incidents + Risk
+        ↓
+Monitoring / Drift
+        ↓
+Persistent SQL Data Layer
+        ↓
+Model Evaluation / Retraining Recommendation
+```
 
 ## Research integrity
 
-OS-visible Wi‑Fi discovery and offline PCAP replay are not equivalent to
-monitor-mode capture. VantaWave records the collection mode explicitly so
-later reports can distinguish data provenance.
+Drift signals are monitoring indicators, not proof of an attack.
+Retraining recommendations are rule-based decisions with recorded reasons.

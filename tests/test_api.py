@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "0.7.0"
+    assert body["version"] == "0.9.0"
 
 
 def test_health():
@@ -102,3 +102,25 @@ def test_sensor_capabilities():
     body = response.json()
     assert "host" in body
     assert "adapters" in body
+
+
+def test_lab_capabilities():
+    response = client.get("/lab/capabilities")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["authorized_target_registry"] is True
+    assert body["active_attack_automation"] is False
+
+
+def test_data_capabilities():
+    response = client.get("/data/capabilities")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["sqlite_default"] is True
+    assert body["postgresql_ready"] is True
+
+
+def test_monitoring_policy():
+    response = client.get("/monitoring/policy")
+    assert response.status_code == 200
+    assert "interval_hours" in response.json()
