@@ -90,6 +90,8 @@ src/vantawave/monitoring/scores.py
 src/vantawave/monitoring/service.py
 src/vantawave/registry/__init__.py
 src/vantawave/registry/local.py
+src/vantawave/release/__init__.py
+src/vantawave/release/validation.py
 src/vantawave/reports/__init__.py
 src/vantawave/reports/research.py
 src/vantawave/reports/v05.py
@@ -111,6 +113,11 @@ src/vantawave/sensors/features/__init__.py
 src/vantawave/sensors/features/window.py
 src/vantawave/sensors/pcap/__init__.py
 src/vantawave/sensors/pcap/replay.py
+src/vantawave/web/__init__.py
+src/vantawave/web/app.css
+src/vantawave/web/app.js
+src/vantawave/web/index.html
+src/vantawave/web/routes.py
 src/vantawave_ml.egg-info/PKG-INFO
 src/vantawave_ml.egg-info/SOURCES.txt
 src/vantawave_ml.egg-info/dependency_links.txt
@@ -148,6 +155,7 @@ tests/test_profile.py
 tests/test_promotion.py
 tests/test_rag.py
 tests/test_registry.py
+tests/test_release_validation.py
 tests/test_research_split.py
 tests/test_risk.py
 tests/test_sensor_collector.py
@@ -159,4 +167,5 @@ tests/test_shap_adapter.py
 tests/test_splitting.py
 tests/test_thresholds.py
 tests/test_v05_report.py
+tests/test_web_assets.py
 tests/test_windows_netsh_sensor.py

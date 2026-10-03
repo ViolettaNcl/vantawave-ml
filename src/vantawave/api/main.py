@@ -2,6 +2,7 @@ from importlib.util import find_spec
 
 from fastapi import FastAPI, HTTPException
 from vantawave.api.ai_routes import router as ai_router
+from vantawave.web.routes import router as web_router
 from vantawave.core.readiness import readiness_report
 from vantawave.core.logging.json_logger import configure_logging
 from vantawave.core.settings import load_settings
@@ -29,18 +30,19 @@ configure_logging(level=settings.log_level, format_name=settings.log_format)
 
 app = FastAPI(
     title="VantaWave ML",
-    version="0.11.0",
+    version="1.0.0",
     description="Wi-Fi telemetry, ML, deep anomaly detection, MLOps and AI research platform.",
 )
 
 app.include_router(ai_router)
+app.include_router(web_router)
 
 
 @app.get("/")
 def root():
     return {
         "project": "VantaWave ML",
-        "version": "0.11.0",
+        "version": "1.0.0",
         "status": "running",
         "docs": "/docs",
         "health": "/health",
@@ -50,7 +52,7 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "project": "VantaWave ML", "version": "0.11.0"}
+    return {"status": "ok", "project": "VantaWave ML", "version": "1.0.0"}
 
 
 @app.get("/ready")
@@ -286,6 +288,22 @@ def monitoring_recent():
         drift = [orm_to_dict(x) for x in DriftRepository(db).list()[:50]]
         evaluations = [orm_to_dict(x) for x in EvaluationRepository(db).list()[:20]]
     return {"drift_events": drift, "evaluations": evaluations}
+
+
+@app.get("/incidents")
+def incidents():
+    if find_spec("sqlalchemy") is None:
+        raise HTTPException(status_code=503, detail="SQLAlchemy is unavailable.")
+    from vantawave.db.init import initialize_database
+    from vantawave.db.repositories import IncidentRepository
+    from vantawave.db.serialization import orm_to_dict
+    from vantawave.db.session import create_session_factory, session_scope
+
+    engine = initialize_database()
+    factory = create_session_factory(engine)
+    with session_scope(factory) as db:
+        records = [orm_to_dict(item) for item in IncidentRepository(db).list()]
+    return {"incidents": records[:100]}
 
 
 @app.get("/registry/models")

@@ -25,6 +25,14 @@ jobs:
       - name: Tests
         run: python -m pytest
 
+      - name: Final release check
+        run: python scripts/final_portfolio_check.py
+
+      - name: Dashboard/RAG smoke test
+        run: |
+          python scripts/build_knowledge_index.py docs
+          python scripts/seed_portfolio_demo.py
+
       - name: Classical lifecycle smoke test
         run: |
           python scripts/generate_awid3_fixture.py

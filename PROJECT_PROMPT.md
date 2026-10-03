@@ -30,19 +30,24 @@ For each development step:
 
 ## Current baseline
 
-v0.11 combines v0.10 and v0.11.
+VantaWave ML v1.0 is the portfolio release.
 
-The platform now includes persisted security evidence, local/semantic RAG,
-grounded Security Analyst reports with citations, restricted read-only agent
-planning, environment configuration, structured logs, readiness checks,
-Docker/Compose and PostgreSQL production deployment.
+The repository now contains the complete architecture from passive telemetry
+and ML through monitoring, persistence, grounded RAG, production engineering
+and the SOC dashboard.
 
-Future work must preserve:
+Do not invent the remaining external evidence.
 
-- AI claims are grounded in persisted evidence or retrieved knowledge;
-- unsupported evidence produces uncertainty rather than invented facts;
-- citations must come from the supplied evidence allow-list;
-- AI/agent actions remain read-only and defensive;
-- production secrets stay outside source control;
-- database schema changes use Alembic;
-- readiness is distinct from process liveness.
+Before claiming real-world model performance, complete `FINAL_VALIDATION.md`
+on the user's actual Windows/hardware environment and a real external research
+dataset.
+
+Preserve:
+- train/validation/test integrity;
+- authorized-target boundaries;
+- sensor provenance;
+- evidence-grounded AI citations;
+- explicit model promotion/retraining rules;
+- migration-based database schema changes;
+- secret hygiene;
+- distinction between synthetic demonstration results and real validation.

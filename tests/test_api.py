@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "0.11.0"
+    assert body["version"] == "1.0.0"
 
 
 def test_health():
@@ -145,3 +145,22 @@ def test_public_config():
     response = client.get("/config/public")
     assert response.status_code == 200
     assert "database_url" not in response.json()
+
+
+def test_dashboard_routes():
+    html = client.get("/dashboard")
+    css = client.get("/dashboard/app.css")
+    js = client.get("/dashboard/app.js")
+
+    assert html.status_code == 200
+    assert "VantaWave ML" in html.text
+    assert css.status_code == 200
+    assert "--accent" in css.text
+    assert js.status_code == 200
+    assert "loadOverview" in js.text
+
+
+def test_incidents_endpoint():
+    response = client.get("/incidents")
+    assert response.status_code == 200
+    assert "incidents" in response.json()

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VantaWave ML — Security Operations</title>
+  <link rel="stylesheet" href="/dashboard/app.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark">VW</div>
+        <div>
+          <div class="brand-title">VantaWave ML</div>
+          <div class="brand-sub">Security Intelligence</div>
+        </div>
+      </div>
+
+      <nav id="nav">
+        <button class="nav-item active" data-view="overview">Overview</button>
+        <button class="nav-item" data-view="live">Live Monitor</button>
+        <button class="nav-item" data-view="incidents">Incidents</button>
+        <button class="nav-item" data-view="models">Models</button>
+        <button class="nav-item" data-view="experiments">Experiments</button>
+        <button class="nav-item" data-view="lab">Authorized Lab</button>
+        <button class="nav-item" data-view="monitoring">Monitoring</button>
+        <button class="nav-item" data-view="analyst">AI Analyst</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="status-dot"></div>
+        <div>
+          <div class="foot-label">API status</div>
+          <div id="sidebar-health" class="foot-value">Checking…</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">VantaWave ML / SOC</div>
+          <h1 id="view-title">Overview</h1>
+        </div>
+        <div class="top-actions">
+          <button id="refresh" class="ghost">Refresh</button>
+          <a class="primary" href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+        </div>
+      </header>
+
+      <section id="view-overview" class="view active">
+        <div class="metrics">
+          <article class="metric">
+            <span class="metric-label">System</span>
+            <strong id="metric-system">—</strong>
+            <span id="metric-system-sub">Loading</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Sensor</span>
+            <strong id="metric-sensor">—</strong>
+            <span id="metric-sensor-sub">Capability</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Incidents</span>
+            <strong id="metric-incidents">—</strong>
+            <span id="metric-incidents-sub">Persisted</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Model Registry</span>
+            <strong id="metric-models">—</strong>
+            <span id="metric-models-sub">Versions</span>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Runtime</span>
+                <h2>Readiness</h2>
+              </div>
+              <span id="readiness-badge" class="badge neutral">Checking</span>
+            </div>
+            <div id="readiness-list" class="list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Machine Learning</span>
+                <h2>Capabilities</h2>
+              </div>
+            </div>
+            <div id="ml-capabilities" class="cap-grid"></div>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Monitoring</span>
+                <h2>Recent drift</h2>
+              </div>
+            </div>
+            <div id="overview-drift" class="list empty">No monitoring data yet.</div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Authorized lab</span>
+                <h2>Targets</h2>
+              </div>
+            </div>
+            <div id="overview-targets" class="list empty">No registered targets yet.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-live" class="view">
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Host sensor</span>
+                <h2>Capabilities</h2>
+              </div>
+            </div>
+            <pre id="sensor-capabilities" class="codebox"></pre>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Passive discovery</span>
+                <h2>Windows WLAN</h2>
+              </div>
+              <button id="scan-wifi" class="ghost">Scan</button>
+            </div>
+            <div id="wifi-results" class="list empty">Run on Windows to inspect OS-visible Wi-Fi networks.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-incidents" class="view">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Persistent evidence</span>
+              <h2>Incidents</h2>
+            </div>
+          </div>
+          <div id="incidents-list" class="table-wrap"></div>
+        </article>
+      </section>
+
+      <section id="view-models" class="view">
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Registry</span><h2>Model versions</h2></div></div>
+            <div id="models-list" class="list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Promotion</span><h2>Policy</h2></div></div>
+            <pre id="promotion-policy" class="codebox"></pre>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-experiments" class="view">
+        <article class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Research history</span><h2>Experiments</h2></div></div>
+          <div id="experiments-list" class="list"></div>
+        </article>
+      </section>
+
+      <section id="view-lab" class="view">
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Scope control</span><h2>Authorized targets</h2></div></div>
+            <div id="lab-targets" class="list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Sessions</span><h2>Lab history</h2></div></div>
+            <div id="lab-sessions" class="list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-monitoring" class="view">
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Policy</span><h2>Evaluation</h2></div></div>
+            <pre id="monitoring-policy" class="codebox"></pre>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Data platform</span><h2>Recent evaluations</h2></div></div>
+            <div id="monitoring-evaluations" class="list"></div>
+          </article>
+        </div>
+        <article class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Distribution changes</span><h2>Drift events</h2></div></div>
+          <div id="monitoring-drift" class="table-wrap"></div>
+        </article>
+      </section>
+
+      <section id="view-analyst" class="view">
+        <div class="grid analyst-grid">
+          <article class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Grounded AI</span><h2>Incident Analyst</h2></div></div>
+            <label class="field">
+              <span>Incident ID</span>
+              <input id="analyst-incident-id" placeholder="Paste a persisted incident ID" />
+            </label>
+            <label class="field">
+              <span>Question</span>
+              <textarea id="analyst-query" rows="5" placeholder="What does the evidence show and what should I verify defensively?"></textarea>
+            </label>
+            <button id="analyze-incident" class="primary full">Analyze evidence</button>
+          </article>
+          <article class="panel result-panel">
+            <div class="panel-head"><div><span class="eyebrow">Evidence-grounded output</span><h2>Report</h2></div></div>
+            <div id="analyst-result" class="analyst-result empty">Select an incident and request an analysis.</div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>VantaWave ML v1.0</span>
+        <span>Authorized security research • Evidence-first AI</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/dashboard/app.js"></script>
+</body>
+</html>
