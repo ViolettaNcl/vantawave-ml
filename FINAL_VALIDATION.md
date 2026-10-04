@@ -99,3 +99,23 @@ exist in v1.0.2 and is not claimed.
 
 Simulation results are demonstration data and must not be described as observed
 real-world attacks.
+
+
+## Launch readiness
+
+- [x] Apache-2.0 license present.
+- [x] package metadata includes repository URLs and license.
+- [x] Ruff version pinned.
+- [x] CI lint policy is explicit.
+- [x] social preview asset is 1280×640.
+- [x] read-only static Pages demo present.
+- [x] benchmark transparency page present.
+- [x] community/launch documentation present.
+- [ ] GitHub Topics set in repository settings.
+- [ ] GitHub Pages enabled for `main` → `/docs`.
+- [ ] social preview uploaded in GitHub Settings.
+- [ ] GitHub Release `v1.1.1` created.
+- [ ] Discussions enabled.
+- [ ] first real external benchmark published.
+
+The unchecked items require repository-admin/UI actions or external benchmark evidence.

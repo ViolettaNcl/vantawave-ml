@@ -1,3 +1,24 @@
+# VantaWave ML v1.1.1 — Launch Ready
+
+This patch focuses on open-source credibility, discoverability and reproducible CI rather than new attack/security features.
+
+## Highlights
+
+- Apache-2.0 license
+- pinned Ruff 0.16.10
+- explicit correctness-focused Ruff rule set
+- fixed launch-blocking lint failures
+- GitHub Pages read-only demo
+- social preview image
+- animated dashboard demo
+- benchmark transparency page
+- launch/community playbook
+- citation metadata
+
+See `docs/LAUNCH_CHECKLIST.md` for the final GitHub settings steps.
+
+---
+
 # VantaWave ML v1.1.0
 
 ## Adversary Simulation + Portfolio Polish

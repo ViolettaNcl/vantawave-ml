@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1
+
+### Launch readiness
+- Added Apache-2.0 license and citation metadata.
+- Pinned Ruff 0.16.10 and made CI lint policy explicit/reproducible.
+- Fixed correctness-level Ruff failures from the launch branch.
+- Added a 1280×640 GitHub social-preview asset.
+- Added animated SOC dashboard demo asset.
+- Added a static read-only GitHub Pages demo under `docs/index.html`.
+- Added benchmark transparency page.
+- Added community issue backlog and launch-post drafts.
+- Added launch checklist for topics, Pages, Discussions, social preview and release.
+
+
 ## 1.1.0
 
 ### Added

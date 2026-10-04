@@ -17,7 +17,6 @@ def save_v06_markdown(payload: dict, path: str | Path) -> Path:
 
     auto = payload["autoencoder"]
     iso = payload["isolation_forest"]
-    comp = payload["comparison"]
 
     lines = [
         "# VantaWave ML v0.6 — Deep Anomaly Detection Report",

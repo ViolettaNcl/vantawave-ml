@@ -33,7 +33,7 @@ configure_logging(level=settings.log_level, format_name=settings.log_format)
 
 app = FastAPI(
     title="VantaWave ML",
-    version="1.1.0",
+    version="1.1.1",
     description="Wi-Fi telemetry, ML, deep anomaly detection, MLOps and AI research platform.",
 )
 
@@ -48,7 +48,7 @@ app.include_router(web_router)
 def root():
     return {
         "project": "VantaWave ML",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "status": "running",
         "docs": "/docs",
         "health": "/health",
@@ -58,7 +58,7 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "project": "VantaWave ML", "version": "1.1.0"}
+    return {"status": "ok", "project": "VantaWave ML", "version": "1.1.1"}
 
 
 @app.get("/ready")

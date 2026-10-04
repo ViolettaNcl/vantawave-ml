@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use VantaWave ML in research or teaching, please cite this repository."
+title: "VantaWave ML: Wi-Fi Security, Machine Learning, MLOps and SOC Research Platform"
+type: software
+authors:
+  - family-names: "ViolettaNcl"
+repository-code: "https://github.com/ViolettaNcl/vantawave-ml"
+url: "https://github.com/ViolettaNcl/vantawave-ml"
+version: "1.1.1"
+date-released: 2026-10-04
+license: Apache-2.0
+keywords:
+  - wifi-security
+  - machine-learning
+  - cybersecurity
+  - anomaly-detection
+  - intrusion-detection
+  - mlops

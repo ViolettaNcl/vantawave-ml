@@ -96,6 +96,19 @@
 - [x] portfolio showcase documentation
 - [x] GitHub contribution templates
 
+### v1.1.1 — Launch Ready
+- [x] Apache-2.0 license
+- [x] deterministic Ruff version/policy
+- [x] launch-blocking lint cleanup
+- [x] GitHub social preview asset
+- [x] animated dashboard demo
+- [x] static GitHub Pages demo
+- [x] benchmark transparency page
+- [x] launch/community checklist
+- [x] launch post drafts
+- [x] community issue backlog
+- [x] citation metadata
+
 ## External validation still required before real-world claims
 
 - [ ] full external research-dataset benchmark

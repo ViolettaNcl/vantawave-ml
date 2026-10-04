@@ -1,5 +1,3 @@
-from types import SimpleNamespace
-
 import pytest
 
 from vantawave.wifi_recovery.recovery import recovery_options

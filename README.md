@@ -6,17 +6,23 @@
 
 ### Wi‑Fi Security Research • Machine Learning • MLOps • Grounded AI • SOC
 
-[![Version](https://img.shields.io/badge/version-1.1.0-6be4ff?style=for-the-badge)](RELEASE_NOTES.md)
+[![Version](https://img.shields.io/badge/version-1.1.1-6be4ff?style=for-the-badge)](RELEASE_NOTES.md)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](pyproject.toml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-production-009688?style=for-the-badge&logo=fastapi&logoColor=white)](src/vantawave/api)
 [![PyTorch](https://img.shields.io/badge/PyTorch-autoencoder-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](src/vantawave/ml/deep)
 [![Tests](https://img.shields.io/badge/tests-115%20passing-5be28c?style=for-the-badge)](tests)
 [![CI](https://img.shields.io/github/actions/workflow/status/ViolettaNcl/vantawave-ml/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/ViolettaNcl/vantawave-ml/actions)
 [![Security](https://img.shields.io/github/actions/workflow/status/ViolettaNcl/vantawave-ml/security.yml?branch=main&style=for-the-badge&label=Security)](https://github.com/ViolettaNcl/vantawave-ml/actions)
+[![License](https://img.shields.io/badge/license-Apache--2.0-9d7cff?style=for-the-badge)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/ViolettaNcl/vantawave-ml?style=for-the-badge&logo=github&label=Stars)](https://github.com/ViolettaNcl/vantawave-ml/stargazers)
 
-**An end-to-end defensive Wi‑Fi security platform built as a production-grade ML engineering portfolio project.**
+**VantaWave ML turns Wi‑Fi telemetry into ML detections, security incidents, monitoring signals, and evidence-grounded SOC analysis.**
+
+[**Live read-only demo**](https://violettancl.github.io/vantawave-ml/) · [**Source**](https://github.com/ViolettaNcl/vantawave-ml) · [**Benchmarks**](docs/BENCHMARKS.md) · [**Release notes**](RELEASE_NOTES.md)
 
 [Dashboard](#-soc-dashboard) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Adversary Simulation](#-adversary-simulation) · [ML/MLOps](#-ml--mlops) · [Security Scope](#-security-scope) · [Русская версия](README_RU.md)
+
+> ⭐ If VantaWave is useful to you, consider starring the repository. It helps other engineers discover the project.
 
 </div>
 
@@ -57,6 +63,14 @@ Docker / PostgreSQL Production Runtime
 The project is intentionally designed around **engineering boundaries, reproducibility, evidence, and honest evaluation** rather than demo-only metrics.
 
 ---
+
+
+## ✦ Product Demo
+
+<img src="docs/assets/dashboard-demo.gif" alt="VantaWave ML SOC dashboard demo" width="100%" />
+
+The browser demo is intentionally read-only and synthetic. The full local dashboard connects to FastAPI, persistence, sensors, models, monitoring, and the grounded AI analyst.
+
 
 ## ✦ Product Surface
 
@@ -587,7 +601,7 @@ Recommended files:
 
 <div align="center">
 
-### VantaWave ML · v1.1.0
+### VantaWave ML · v1.1.1
 
 **Defensive wireless research with production ML engineering discipline.**
 

@@ -6,7 +6,7 @@
 
 ### Wi‑Fi Security • Machine Learning • MLOps • Grounded AI • SOC
 
-[English README](README.md) · [Архитектура](docs/final_architecture.md) · [Демо](docs/demo_walkthrough.md) · [Подготовка к собеседованию](INTERVIEW_DEFENSE.md)
+[English README](README.md) · [Live demo](https://violettancl.github.io/vantawave-ml/) · [Архитектура](docs/final_architecture.md) · [Демо](docs/demo_walkthrough.md) · [Подготовка к собеседованию](INTERVIEW_DEFENSE.md)
 
 </div>
 
@@ -252,7 +252,7 @@ Synthetic fixtures нужны для воспроизводимости.
 
 <div align="center">
 
-### VantaWave ML · v1.1.0
+### VantaWave ML · v1.1.1
 
 **Production-minded ML engineering for defensive wireless security.**
 

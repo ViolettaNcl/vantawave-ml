@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from vantawave.capture_audit.aircrack import parse_aircrack_result
 from vantawave.capture_audit.store import CaptureAuditStore
 from vantawave.capture_audit.vault import EphemeralSecretVault

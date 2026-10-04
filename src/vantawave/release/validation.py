@@ -19,6 +19,18 @@ def validate_release(root: str | Path = ".") -> list[ReleaseCheck]:
     root = Path(root)
     required_files = [
         "README.md",
+        "LICENSE",
+        "CITATION.cff",
+        "CODE_OF_CONDUCT.md",
+        "SUPPORT.md",
+        "docs/index.html",
+        "docs/BENCHMARKS.md",
+        "docs/LAUNCH_CHECKLIST.md",
+        "docs/LAUNCH_POSTS.md",
+        "docs/COMMUNITY_ISSUES.md",
+        "docs/RELEASE_BODY_v1.1.1.md",
+        "docs/assets/social-preview.png",
+        "docs/assets/dashboard-demo.gif",
         "README_RU.md",
         "CHANGELOG.md",
         "CONTRIBUTING.md",

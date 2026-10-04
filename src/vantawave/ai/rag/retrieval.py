@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from importlib.util import find_spec
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer

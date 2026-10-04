@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import uuid
 
 from vantawave.db.init import initialize_database
 from vantawave.db.repositories import (

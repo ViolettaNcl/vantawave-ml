@@ -4,7 +4,6 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 import hashlib
 import json
-import uuid
 
 
 @dataclass(frozen=True)

@@ -100,3 +100,8 @@ Update the relevant files when behavior changes:
 - `RELEASE_NOTES.md`
 - `FINAL_VALIDATION.md`
 - relevant file under `docs/`
+
+
+## License
+
+By contributing, you agree that your contribution may be distributed under the repository Apache-2.0 license.

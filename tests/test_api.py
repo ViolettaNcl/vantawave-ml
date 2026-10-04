@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "1.1.0"
+    assert body["version"] == "1.1.1"
 
 
 def test_health():
