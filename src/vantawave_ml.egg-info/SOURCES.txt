@@ -16,8 +16,15 @@ src/vantawave/ai/rag/documents.py
 src/vantawave/ai/rag/index.py
 src/vantawave/ai/rag/retrieval.py
 src/vantawave/api/ai_routes.py
+src/vantawave/api/capture_audit_routes.py
 src/vantawave/api/main.py
 src/vantawave/api/schemas.py
+src/vantawave/api/wifi_recovery_routes.py
+src/vantawave/capture_audit/__init__.py
+src/vantawave/capture_audit/aircrack.py
+src/vantawave/capture_audit/analyzer.py
+src/vantawave/capture_audit/store.py
+src/vantawave/capture_audit/vault.py
 src/vantawave/core/__init__.py
 src/vantawave/core/readiness.py
 src/vantawave/core/settings.py
@@ -118,6 +125,10 @@ src/vantawave/web/app.css
 src/vantawave/web/app.js
 src/vantawave/web/index.html
 src/vantawave/web/routes.py
+src/vantawave/wifi_recovery/__init__.py
+src/vantawave/wifi_recovery/recovery.py
+src/vantawave/wifi_recovery/strength.py
+src/vantawave/wifi_recovery/windows.py
 src/vantawave_ml.egg-info/PKG-INFO
 src/vantawave_ml.egg-info/SOURCES.txt
 src/vantawave_ml.egg-info/dependency_links.txt
@@ -129,6 +140,8 @@ tests/test_ai_similarity.py
 tests/test_api.py
 tests/test_autoencoder_training.py
 tests/test_awid3.py
+tests/test_capture_audit.py
+tests/test_capture_audit_api.py
 tests/test_data_validation.py
 tests/test_database.py
 tests/test_database_config.py
@@ -168,4 +181,6 @@ tests/test_splitting.py
 tests/test_thresholds.py
 tests/test_v05_report.py
 tests/test_web_assets.py
+tests/test_wifi_recovery.py
+tests/test_wifi_recovery_api.py
 tests/test_windows_netsh_sensor.py

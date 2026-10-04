@@ -2,9 +2,13 @@ const $ = (id) => document.getElementById(id);
 
 const state = {
   cache: new Map(),
+  captureAuditId: null,
+  captureSecretToken: null,
   title: {
     overview: "Overview",
     live: "Live Monitor",
+    recovery: "Wi-Fi Recovery",
+    capture: "Capture Audit",
     incidents: "Incidents",
     models: "Models",
     experiments: "Experiments",
@@ -134,6 +138,460 @@ async function scanWifi() {
     `), "No networks returned by Windows.");
   } catch (error) {
     $("wifi-results").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+
+async function loadRecovery() {
+  const capabilities = await api("/wifi-recovery/capabilities");
+  const profiles = await api("/wifi-recovery/profiles");
+
+  renderList($("recovery-profiles"), (profiles.profiles || []).map(profile => `
+    <div class="list-item network-select" data-profile="${esc(profile.name)}">
+      <div>
+        <div class="list-title">${esc(profile.name)}</div>
+        <div class="list-sub">Windows saved profile</div>
+      </div>
+      ${badge("saved", "good")}
+    </div>
+  `), "No saved Windows Wi-Fi profiles.");
+
+  document.querySelectorAll("[data-profile]").forEach(item => {
+    item.addEventListener("click", () => {
+      $("recovery-ssid").value = item.dataset.profile;
+      checkRecoveryStatus();
+    });
+  });
+
+  if (!capabilities.saved_key_view_enabled) {
+    $("recovery-show-key").disabled = true;
+    $("recovery-show-key").title =
+      "Set VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW=true before starting VantaWave to enable local saved-key viewing.";
+  }
+
+  try {
+    const gateways = await api("/wifi-recovery/gateways");
+    renderList($("recovery-gateways"), (gateways.gateways || []).map(g => `
+      <div class="list-item">
+        <div>
+          <div class="list-title">${esc(g.gateway || "Unknown gateway")}</div>
+          <div class="list-sub">${esc(g.interface_alias || "Unknown interface")} • index ${esc(g.interface_index ?? "—")}</div>
+        </div>
+        ${g.gateway ? `<a class="ghost" href="http://${esc(g.gateway)}" target="_blank" rel="noreferrer">Open</a>` : ""}
+      </div>
+    `), "No default gateway is currently visible.");
+  } catch (error) {
+    $("recovery-gateways").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function scanRecoveryNetworks() {
+  $("recovery-networks").innerHTML = `<div class="empty">Scanning…</div>`;
+  try {
+    const result = await api("/wifi-recovery/nearby");
+    const bySsid = new Map();
+    for (const network of (result.networks || [])) {
+      const key = network.ssid || `(hidden:${network.bssid || "unknown"})`;
+      const previous = bySsid.get(key);
+      if (!previous || (network.signal_percent ?? -1) > (previous.signal_percent ?? -1)) {
+        bySsid.set(key, network);
+      }
+    }
+
+    renderList($("recovery-networks"), [...bySsid.values()].map(n => `
+      <div class="list-item network-select recovery-network"
+           data-ssid="${esc(n.ssid || "")}"
+           data-security="${esc(n.security || "")}">
+        <div>
+          <div class="list-title">${esc(n.ssid || "Hidden SSID")}</div>
+          <div class="list-sub">
+            ${esc(n.bssid || "—")} • channel ${esc(n.channel ?? "—")} • ${esc(n.security || "unknown security")}
+          </div>
+        </div>
+        ${badge(n.signal_percent != null ? `${n.signal_percent}%` : "—", "neutral")}
+      </div>
+    `), "No OS-visible Wi-Fi networks returned.");
+
+    document.querySelectorAll(".recovery-network").forEach(item => {
+      item.addEventListener("click", () => {
+        $("recovery-ssid").value = item.dataset.ssid || "";
+        const security = (item.dataset.security || "").toUpperCase();
+        $("recovery-security").value =
+          security.includes("WPA3") ? "WPA3-Personal" : "WPA2-Personal";
+        checkRecoveryStatus();
+      });
+    });
+  } catch (error) {
+    $("recovery-networks").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function checkRecoveryStatus() {
+  const ssid = $("recovery-ssid").value.trim();
+  if (!ssid) {
+    $("recovery-status").innerHTML = `<div class="empty">SSID is required.</div>`;
+    return;
+  }
+
+  $("recovery-status").innerHTML = `<div class="empty">Checking local Windows/router recovery state…</div>`;
+
+  try {
+    const status = await api(`/wifi-recovery/status?ssid=${encodeURIComponent(ssid)}`);
+    renderList($("recovery-status"), (status.recovery_options || []).map(option => `
+      <div class="list-item">
+        <div>
+          <div class="list-title">${esc(option.title)}</div>
+          <div class="list-sub">${esc(option.description)}</div>
+        </div>
+        ${badge(option.available ? "available" : "not available", option.available ? "good" : "neutral")}
+      </div>
+    `));
+
+    if (!status.saved_profile) {
+      $("recovery-key").textContent =
+        "No saved Windows key exists for this SSID on this laptop.";
+    } else {
+      $("recovery-key").textContent =
+        "Saved profile detected. Use Show saved key if local secret viewing is enabled.";
+    }
+  } catch (error) {
+    $("recovery-status").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function showRecoverySavedKey() {
+  const ssid = $("recovery-ssid").value.trim();
+  if (!ssid) {
+    $("recovery-key").textContent = "SSID is required.";
+    return;
+  }
+
+  $("recovery-key").textContent = "Reading local Windows profile…";
+
+  try {
+    const result = await api("/wifi-recovery/saved-key", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        ssid,
+        explicit_confirmation: true,
+      }),
+    });
+
+    $("recovery-key").textContent = result.saved
+      ? result.password
+      : result.message;
+  } catch (error) {
+    $("recovery-key").textContent = error.message;
+  }
+}
+
+async function auditRecoveryPassword() {
+  const password = $("recovery-password").value;
+  if (!password) {
+    $("recovery-password-audit").innerHTML =
+      `<div class="empty">Enter a password to audit locally.</div>`;
+    return;
+  }
+
+  try {
+    const result = await api("/wifi-recovery/password-strength", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({password}),
+    });
+
+    renderList($("recovery-password-audit"), [
+      `<div class="list-item">
+        <div>
+          <div class="list-title">Local strength: ${esc(result.rating)}</div>
+          <div class="list-sub">Score ${esc(result.score)}/100 • estimated entropy ${Number(result.estimated_entropy_bits || 0).toFixed(1)} bits</div>
+        </div>
+        ${badge(`${result.score}/100`, result.score >= 60 ? "good" : result.score >= 40 ? "warn" : "bad")}
+      </div>`,
+      ...(result.findings || []).map(f => `
+        <div class="list-item">
+          <div><div class="list-title">Finding</div><div class="list-sub">${esc(f)}</div></div>
+        </div>
+      `),
+    ]);
+  } catch (error) {
+    $("recovery-password-audit").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function connectRecoveryNetwork() {
+  const ssid = $("recovery-ssid").value.trim();
+  const password = $("recovery-password").value;
+  const security = $("recovery-security").value;
+
+  if (!ssid || !password) {
+    $("recovery-password-audit").innerHTML =
+      `<div class="empty">SSID and password are required to connect.</div>`;
+    return;
+  }
+
+  $("recovery-password-audit").innerHTML =
+    `<div class="empty">Sending a local Windows connection request…</div>`;
+
+  try {
+    const result = await api("/wifi-recovery/connect", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ssid, password, security}),
+    });
+
+    $("recovery-password-audit").innerHTML = `
+      <div class="list-item">
+        <div>
+          <div class="list-title">${esc(result.message)}</div>
+          <div class="list-sub">
+            SSID ${esc(result.ssid)} • ${esc(result.security)}.
+            Windows now owns the resulting saved profile if the profile was accepted.
+          </div>
+        </div>
+        ${badge(result.success ? "requested" : "failed", result.success ? "good" : "bad")}
+      </div>`;
+  } catch (error) {
+    $("recovery-password-audit").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function deleteRecoveryProfile() {
+  const ssid = $("recovery-ssid").value.trim();
+  if (!ssid) return;
+
+  if (!window.confirm(`Remove the saved Windows Wi-Fi profile "${ssid}" from this laptop?`)) {
+    return;
+  }
+
+  try {
+    const result = await api(`/wifi-recovery/profiles/${encodeURIComponent(ssid)}`, {
+      method: "DELETE",
+    });
+    $("recovery-key").textContent = result.message;
+    await loadRecovery();
+    await checkRecoveryStatus();
+  } catch (error) {
+    $("recovery-key").textContent = error.message;
+  }
+}
+
+
+async function loadCaptureAudit() {
+  const [capabilities, targets] = await Promise.all([
+    api("/capture-audit/capabilities"),
+    api("/lab/targets"),
+  ]);
+
+  const targetSelect = $("capture-target");
+  const authorizedTargets = (targets.targets || []).filter(t => t.authorized);
+
+  targetSelect.innerHTML = authorizedTargets.length
+    ? authorizedTargets.map(t =>
+        `<option value="${esc(t.target_id)}">${esc(t.name)} — ${esc(t.ssid)} — ${esc(t.bssid)}</option>`
+      ).join("")
+    : `<option value="">No authorized targets registered</option>`;
+
+  renderList($("capture-capabilities"), [
+    `<div class="list-item">
+      <div>
+        <div class="list-title">Aircrack-ng</div>
+        <div class="list-sub">${esc(capabilities.aircrack_ng?.reason || capabilities.aircrack_ng?.executable || "Available")}</div>
+      </div>
+      ${badge(capabilities.aircrack_ng?.available ? "available" : "not installed", capabilities.aircrack_ng?.available ? "good" : "warn")}
+    </div>`,
+    `<div class="list-item">
+      <div>
+        <div class="list-title">SSID-only recovery</div>
+        <div class="list-sub">An unknown WPA2/WPA3 password cannot be derived from an SSID alone.</div>
+      </div>
+      ${badge("not supported", "neutral")}
+    </div>`,
+    `<div class="list-item">
+      <div>
+        <div class="list-title">Candidate verification</div>
+        <div class="list-sub">Exactly one locally supplied WPA2 candidate per verification request.</div>
+      </div>
+      ${badge(capabilities.single_candidate_verification ? "ready" : "requires aircrack-ng", capabilities.single_candidate_verification ? "good" : "warn")}
+    </div>`,
+  ]);
+}
+
+async function uploadCaptureAudit() {
+  const targetId = $("capture-target").value;
+  const file = $("capture-file").files?.[0];
+
+  if (!targetId) {
+    $("capture-report").innerHTML =
+      `<div class="empty">Register/select an Authorized Lab target first.</div>`;
+    return;
+  }
+  if (!file) {
+    $("capture-report").innerHTML =
+      `<div class="empty">Select a .pcap, .pcapng or .cap file.</div>`;
+    return;
+  }
+
+  $("capture-report").innerHTML =
+    `<div class="empty">Uploading and analyzing capture…</div>`;
+  state.captureAuditId = null;
+  state.captureSecretToken = null;
+  $("capture-masked-secret").textContent = "Not verified";
+  $("capture-copy-secret").disabled = true;
+  $("capture-connect").disabled = true;
+
+  const form = new FormData();
+  form.append("target_id", targetId);
+  form.append("capture", file);
+
+  try {
+    const result = await api("/capture-audit/upload", {
+      method: "POST",
+      body: form,
+    });
+
+    state.captureAuditId = result.audit_id;
+    const c = result.capture || {};
+
+    renderList($("capture-report"), [
+      `<div class="list-item">
+        <div>
+          <div class="list-title">${esc(result.target?.ssid || "Target")}</div>
+          <div class="list-sub">${esc(result.target?.bssid || "—")} • audit ${esc(result.audit_id)}</div>
+        </div>
+        ${badge(c.target_seen ? "target seen" : "not seen", c.target_seen ? "good" : "bad")}
+      </div>`,
+      `<div class="list-item">
+        <div>
+          <div class="list-title">802.11 packets</div>
+          <div class="list-sub">${esc(c.dot11_packets ?? 0)} of ${esc(c.total_packets ?? 0)} total packets</div>
+        </div>
+        ${badge(String(c.target_packets ?? 0), "neutral")}
+      </div>`,
+      `<div class="list-item">
+        <div>
+          <div class="list-title">Target EAPOL evidence</div>
+          <div class="list-sub">${esc(c.target_eapol_packets ?? 0)} matching EAPOL frame(s)</div>
+        </div>
+        ${badge(c.likely_handshake_evidence ? "multiple frames" : "insufficient/none", c.likely_handshake_evidence ? "good" : "warn")}
+      </div>`,
+      `<div class="list-item">
+        <div>
+          <div class="list-title">Candidate verification</div>
+          <div class="list-sub">${(c.notes || []).map(esc).join(" ")}</div>
+        </div>
+        ${badge(c.candidate_verification_ready ? "eligible" : "not ready", c.candidate_verification_ready ? "good" : "warn")}
+      </div>`,
+    ]);
+  } catch (error) {
+    $("capture-report").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function verifyCaptureCandidate() {
+  const candidate = $("capture-candidate").value;
+  const security = $("capture-security").value;
+
+  if (!state.captureAuditId) {
+    $("capture-verification").innerHTML =
+      `<div class="empty">Analyze an authorized capture first.</div>`;
+    return;
+  }
+  if (!candidate) {
+    $("capture-verification").innerHTML =
+      `<div class="empty">Enter one WPA2 password candidate.</div>`;
+    return;
+  }
+
+  $("capture-verification").innerHTML =
+    `<div class="empty">Asking Aircrack-ng to verify this single candidate…</div>`;
+
+  try {
+    const result = await api("/capture-audit/verify-candidate", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        audit_id: state.captureAuditId,
+        candidate,
+        security,
+      }),
+    });
+
+    state.captureSecretToken = result.secret_token || null;
+
+    $("capture-verification").innerHTML = `
+      <div class="list-item">
+        <div>
+          <div class="list-title">${esc(result.message)}</div>
+          <div class="list-sub">The candidate itself is not written into the capture report or VantaWave logs.</div>
+        </div>
+        ${badge(result.verified ? "verified" : "not verified", result.verified ? "good" : "bad")}
+      </div>`;
+
+    if (result.verified && result.secret_token) {
+      $("capture-masked-secret").textContent = result.masked_secret || "••••••••";
+      $("capture-connect").disabled = false;
+      $("capture-copy-secret").disabled = false;
+      $("capture-candidate").value = "";
+    } else {
+      $("capture-masked-secret").textContent = "Not verified";
+      $("capture-connect").disabled = true;
+      $("capture-copy-secret").disabled = true;
+    }
+  } catch (error) {
+    state.captureSecretToken = null;
+    $("capture-masked-secret").textContent = "Not verified";
+    $("capture-connect").disabled = true;
+    $("capture-copy-secret").disabled = true;
+    $("capture-verification").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function connectVerifiedCaptureSecret() {
+  if (!state.captureSecretToken) return;
+
+  $("capture-connect-result").innerHTML =
+    `<div class="empty">Requesting Windows connection with the verified in-memory secret…</div>`;
+
+  try {
+    const result = await api("/capture-audit/connect-verified", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({token: state.captureSecretToken}),
+    });
+
+    $("capture-connect-result").innerHTML = `
+      <div class="list-item">
+        <div>
+          <div class="list-title">${esc(result.message)}</div>
+          <div class="list-sub">${esc(result.ssid || "SSID")} • ${esc(result.security || "")}</div>
+        </div>
+        ${badge(result.success ? "connected" : (result.request_accepted ? "requested" : "failed"), result.success ? "good" : "warn")}
+      </div>`;
+  } catch (error) {
+    $("capture-connect-result").innerHTML =
+      `<div class="empty">${esc(error.message)}</div>`;
+  }
+}
+
+async function copyVerifiedCaptureSecret() {
+  if (!state.captureSecretToken) return;
+
+  try {
+    const result = await api(`/capture-audit/secret/${encodeURIComponent(state.captureSecretToken)}`);
+    await navigator.clipboard.writeText(result.password);
+    $("capture-connect-result").innerHTML = `
+      <div class="list-item">
+        <div>
+          <div class="list-title">Verified secret copied locally</div>
+          <div class="list-sub">The visible mask is not the password; the clipboard received the actual verified in-memory candidate.</div>
+        </div>
+        ${badge("copied", "good")}
+      </div>`;
+  } catch (error) {
+    $("capture-connect-result").innerHTML =
+      `<div class="empty">${esc(error.message)}</div>`;
   }
 }
 
@@ -269,6 +727,8 @@ async function loadView(view) {
   try {
     if (view === "overview") await loadOverview();
     if (view === "live") await loadLive();
+    if (view === "recovery") await loadRecovery();
+    if (view === "capture") await loadCaptureAudit();
     if (view === "incidents") await loadIncidents();
     if (view === "models") await loadModels();
     if (view === "experiments") await loadExperiments();
@@ -297,5 +757,18 @@ $("refresh").addEventListener("click", () => {
 });
 $("scan-wifi").addEventListener("click", scanWifi);
 $("analyze-incident").addEventListener("click", analyzeIncident);
+
+$("recovery-scan").addEventListener("click", scanRecoveryNetworks);
+$("recovery-refresh-profiles").addEventListener("click", loadRecovery);
+$("recovery-check-status").addEventListener("click", checkRecoveryStatus);
+$("recovery-show-key").addEventListener("click", showRecoverySavedKey);
+$("recovery-audit-password").addEventListener("click", auditRecoveryPassword);
+$("recovery-connect").addEventListener("click", connectRecoveryNetwork);
+$("recovery-delete-profile").addEventListener("click", deleteRecoveryProfile);
+
+$("capture-upload").addEventListener("click", uploadCaptureAudit);
+$("capture-verify").addEventListener("click", verifyCaptureCandidate);
+$("capture-connect").addEventListener("click", connectVerifiedCaptureSecret);
+$("capture-copy-secret").addEventListener("click", copyVerifiedCaptureSecret);
 
 loadOverview();

@@ -81,3 +81,12 @@ The repository contains a separate security workflow with:
 - production Docker image build.
 
 It runs on pull requests, manually, and on a weekly schedule.
+
+
+## Local saved Wi-Fi credential viewing
+
+`VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW` defaults to `false`.
+
+Only enable it for local troubleshooting on the user's own machine. The API
+also requires localhost for the saved-key endpoint. It should remain disabled
+in Docker/remote deployments.

@@ -15,6 +15,7 @@ class Settings:
     database_url: str | None
     knowledge_paths: tuple[str, ...]
     readiness_requires_database: bool
+    allow_local_credential_view: bool
 
     def to_dict(self):
         return asdict(self)
@@ -43,6 +44,10 @@ def load_settings() -> Settings:
         knowledge_paths=knowledge,
         readiness_requires_database=_bool_env(
             "VANTAWAVE_READINESS_REQUIRES_DATABASE",
+            default=False,
+        ),
+        allow_local_credential_view=_bool_env(
+            "VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW",
             default=False,
         ),
     )

@@ -40,3 +40,44 @@
 
 Items above are intentionally not marked complete without evidence from the
 actual external dataset/user hardware.
+
+
+## Wi-Fi Recovery validation
+
+Run on the user's Windows laptop:
+
+- [ ] `python scripts/wifi_recovery.py profiles`
+- [ ] `python scripts/wifi_recovery.py scan`
+- [ ] `python scripts/wifi_recovery.py status --ssid "<OWN_SSID>"`
+- [ ] Confirm that a never-used SSID reports no saved Windows key.
+- [ ] Test local password-strength audit.
+- [ ] Test connection using the known owner-supplied passphrase.
+- [ ] Confirm the network connects.
+- [ ] Test `delete-profile` if a clean no-saved-profile state is desired again.
+- [ ] If testing saved-key display, explicitly enable
+      `VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW=true` and confirm it remains
+      accessible only from localhost.
+
+Do not mark "unknown password recovery" as validated: v1.0.1 intentionally
+does not implement unknown WPA2/WPA3 password derivation.
+
+
+## Authorized Capture Audit validation
+
+On the user's authorized lab:
+
+- [ ] Install Scapy extra.
+- [ ] Install Aircrack-ng or set `VANTAWAVE_AIRCRACK_PATH`.
+- [ ] Register the owned/authorized AP in Authorized Lab.
+- [ ] Import an authorized `.pcap/.pcapng/.cap`.
+- [ ] Confirm target SSID/BSSID matching.
+- [ ] Confirm EAPOL evidence is reported accurately.
+- [ ] Test one known-wrong candidate: must not verify.
+- [ ] Test the known-correct owner password: must verify when the capture is usable.
+- [ ] Confirm dashboard displays a mask, not the plaintext.
+- [ ] Confirm `Connect verified` uses the in-memory verified value.
+- [ ] Confirm secret copy is unavailable unless local secret viewing is explicitly enabled.
+- [ ] Delete local audit artifacts after testing if no longer needed.
+
+Do not mark `SSID-only password recovery` complete; that capability does not
+exist in v1.0.2 and is not claimed.

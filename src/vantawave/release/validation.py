@@ -34,6 +34,13 @@ def validate_release(root: str | Path = ".") -> list[ReleaseCheck]:
         "docs/database.md",
         "docs/deep_anomaly_detection.md",
         "docs/passive_sensor.md",
+        "docs/wifi_recovery.md",
+        "docs/authorized_capture_audit.md",
+        "src/vantawave/capture_audit/analyzer.py",
+        "src/vantawave/capture_audit/aircrack.py",
+        "src/vantawave/api/capture_audit_routes.py",
+        "src/vantawave/wifi_recovery/windows.py",
+        "src/vantawave/api/wifi_recovery_routes.py",
     ]
 
     checks = []

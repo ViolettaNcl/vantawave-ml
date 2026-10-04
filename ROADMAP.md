@@ -76,6 +76,31 @@
 - [x] release validation
 - [x] v1.0 release notes
 
+### v1.0.1 — Wi-Fi Recovery patch
+- [x] Windows saved-profile inventory
+- [x] explicit local saved-key export
+- [x] nearby Wi-Fi selection
+- [x] current interface / gateway discovery
+- [x] local password-strength audit
+- [x] WPA2/WPA3 connection using supplied passphrase
+- [x] saved-profile removal
+- [x] dashboard Recovery page
+- [x] local-only credential safeguards
+- [x] recovery documentation
+
+### v1.0.2 — Authorized Capture Audit
+- [x] authorized capture upload
+- [x] target-bound SSID/BSSID verification
+- [x] EAPOL evidence inspection
+- [x] Aircrack-ng capability detection
+- [x] configurable Aircrack executable path
+- [x] single-candidate WPA2 verification
+- [x] no wordlist/bruteforce API
+- [x] ephemeral verified-secret vault
+- [x] masked secret display
+- [x] connect with verified secret
+- [x] optional localhost-only secret copy
+
 ## External validation still required before real-world claims
 
 - [ ] full real external research-dataset benchmark

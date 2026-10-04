@@ -9,11 +9,13 @@ def test_settings_from_environment(monkeypatch):
     monkeypatch.setenv("VANTAWAVE_ENV", "test")
     monkeypatch.setenv("VANTAWAVE_PORT", "9999")
     monkeypatch.setenv("VANTAWAVE_READINESS_REQUIRES_DATABASE", "true")
+    monkeypatch.setenv("VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW", "true")
 
     settings = load_settings()
     assert settings.environment == "test"
     assert settings.port == 9999
     assert settings.readiness_requires_database is True
+    assert settings.allow_local_credential_view is True
 
 
 def test_json_formatter_emits_structured_payload():

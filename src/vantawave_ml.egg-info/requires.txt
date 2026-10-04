@@ -8,6 +8,7 @@ pydantic>=2.8
 pyyaml>=6.0
 SQLAlchemy<2.1,>=2.0
 alembic<2,>=1.20
+python-multipart>=0.0.9
 
 [boosting]
 catboost>=1.2

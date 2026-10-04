@@ -20,6 +20,8 @@
       <nav id="nav">
         <button class="nav-item active" data-view="overview">Overview</button>
         <button class="nav-item" data-view="live">Live Monitor</button>
+<button class="nav-item" data-view="recovery">Wi-Fi Recovery</button>
+<button class="nav-item" data-view="capture">Capture Audit</button>
         <button class="nav-item" data-view="incidents">Incidents</button>
         <button class="nav-item" data-view="models">Models</button>
         <button class="nav-item" data-view="experiments">Experiments</button>
@@ -143,6 +145,227 @@
         </div>
       </section>
 
+
+      <section id="view-recovery" class="view">
+        <div class="notice warning">
+          <strong>What this module can and cannot do</strong>
+          <p>
+            VantaWave can reveal a Wi-Fi key only when Windows already has that key saved locally.
+            If this laptop has never connected to the SSID, there is no stored credential to reveal.
+            The module can still scan the network, show legitimate recovery paths, audit a password
+            you provide locally, and connect Windows using that supplied password.
+          </p>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Local Windows state</span>
+                <h2>Saved Wi-Fi profiles</h2>
+              </div>
+              <button id="recovery-refresh-profiles" class="ghost">Refresh</button>
+            </div>
+            <div id="recovery-profiles" class="list empty">Loading saved profiles…</div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Nearby networks</span>
+                <h2>Select your Wi-Fi</h2>
+              </div>
+              <button id="recovery-scan" class="ghost">Scan</button>
+            </div>
+            <div id="recovery-networks" class="list empty">Run a scan to see OS-visible Wi-Fi networks.</div>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Credential status</span>
+                <h2>Recovery status</h2>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>SSID</span>
+              <input id="recovery-ssid" placeholder="Choose or type your Wi-Fi name" />
+            </label>
+
+            <button id="recovery-check-status" class="ghost full">Check recovery options</button>
+            <div id="recovery-status" class="list recovery-block empty">No SSID selected.</div>
+
+            <div class="secret-box">
+              <div>
+                <div class="list-title">Saved Windows password</div>
+                <div class="list-sub">
+                  Available only for an already-saved Windows profile and only when local
+                  credential viewing is explicitly enabled.
+                </div>
+              </div>
+              <button id="recovery-show-key" class="ghost">Show saved key</button>
+              <code id="recovery-key" class="secret-value">Not requested</code>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Known credential</span>
+                <h2>Audit & connect</h2>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Security</span>
+              <select id="recovery-security">
+                <option>WPA2-Personal</option>
+                <option>WPA3-Personal</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Password</span>
+              <input id="recovery-password" type="password" autocomplete="new-password"
+                     placeholder="Enter the password locally" />
+            </label>
+
+            <div class="button-row">
+              <button id="recovery-audit-password" class="ghost">Audit strength</button>
+              <button id="recovery-connect" class="primary">Connect</button>
+            </div>
+
+            <div id="recovery-password-audit" class="list recovery-block empty">
+              The password stays in the local request and is not written to VantaWave logs/reports.
+            </div>
+
+            <button id="recovery-delete-profile" class="danger-link">
+              Remove saved Windows profile for this SSID
+            </button>
+          </article>
+        </div>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Router recovery</span>
+              <h2>Possible local gateways</h2>
+            </div>
+          </div>
+          <div id="recovery-gateways" class="list empty">
+            Gateway information becomes useful when the PC has an authorized wired/other local path
+            to the router. It does not bypass router administration authentication.
+          </div>
+        </article>
+      </section>
+
+
+      <section id="view-capture" class="view">
+        <div class="notice warning">
+          <strong>Authorized capture verification</strong>
+          <p>
+            This page does not turn an SSID into a password. It analyzes a capture from an
+            explicitly registered lab target, looks for WPA/WPA2 EAPOL evidence, and can ask
+            Aircrack-ng to verify one password candidate you supply. Wordlist/brute-force APIs
+            are intentionally not exposed.
+          </p>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Step 1</span>
+                <h2>Authorized target & capture</h2>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Authorized Lab target</span>
+              <select id="capture-target"></select>
+            </label>
+
+            <label class="field">
+              <span>PCAP / PCAPNG / CAP</span>
+              <input id="capture-file" type="file" accept=".pcap,.pcapng,.cap" />
+            </label>
+
+            <button id="capture-upload" class="primary full">Analyze capture</button>
+            <div id="capture-capabilities" class="list recovery-block empty">Loading capabilities…</div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Evidence</span>
+                <h2>Capture report</h2>
+              </div>
+            </div>
+            <div id="capture-report" class="list empty">No capture analyzed yet.</div>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Step 2</span>
+                <h2>Verify one candidate</h2>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>Security</span>
+              <select id="capture-security">
+                <option>WPA2-Personal</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Password candidate</span>
+              <input id="capture-candidate" type="password" autocomplete="new-password"
+                     placeholder="Enter one candidate locally" />
+            </label>
+
+            <button id="capture-verify" class="ghost full">Verify candidate against capture</button>
+            <div id="capture-verification" class="list recovery-block empty">
+              Analyze a matching authorized capture first.
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Verified local secret</span>
+                <h2>Connect</h2>
+              </div>
+            </div>
+
+            <div class="secret-box">
+              <div>
+                <div class="list-title">Verified candidate</div>
+                <div class="list-sub">
+                  The real candidate is held only in process memory for a short period after
+                  Aircrack-ng confirms it.
+                </div>
+              </div>
+              <code id="capture-masked-secret" class="secret-value">Not verified</code>
+              <div class="button-row">
+                <button id="capture-copy-secret" class="ghost" disabled>Copy verified secret</button>
+                <button id="capture-connect" class="primary" disabled>Connect verified</button>
+              </div>
+            </div>
+
+            <div id="capture-connect-result" class="list recovery-block empty">
+              No verified candidate is available.
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section id="view-incidents" class="view">
         <article class="panel">
           <div class="panel-head">
@@ -227,7 +450,7 @@
       </section>
 
       <footer class="footer">
-        <span>VantaWave ML v1.0</span>
+        <span>VantaWave ML v1.0.2</span>
         <span>Authorized security research • Evidence-first AI</span>
       </footer>
     </main>

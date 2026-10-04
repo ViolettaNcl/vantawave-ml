@@ -117,3 +117,43 @@ Do not say:
 - a high anomaly score proves compromise;
 - the AI analyst discovered facts not present in evidence;
 - VantaWave can compromise arbitrary Wi-Fi networks.
+
+
+## Why does Wi-Fi Recovery not crack an unknown WPA2/WPA3 password?
+
+A laptop that has never connected to a network does not have the password
+stored locally. VantaWave distinguishes local credential recovery from
+password cracking.
+
+The recovery module can show an already-saved Windows key with explicit local
+authorization, help locate router recovery paths, audit an owner-supplied
+passphrase, create a Windows WPA2/WPA3 profile and request a connection.
+
+This keeps the project technically honest: it does not pretend that an unknown
+modern Wi-Fi password can simply be "read from the air."
+
+
+## Why is Capture Audit single-candidate only?
+
+The purpose of the integration is to demonstrate correct WPA/WPA2 evidence
+handling and authorized candidate verification without turning the web API
+into a generic cracking service.
+
+Aircrack-ng can test candidate passphrases against captured WPA/WPA2
+authentication material. VantaWave restricts that integration to:
+
+- an explicitly registered Authorized Lab target;
+- a local uploaded capture;
+- one passphrase candidate per request;
+- no wordlist/brute-force endpoint.
+
+A successful candidate is kept briefly in process memory so the dashboard can
+connect with it without displaying plaintext.
+
+## Why can't the dashboard show an unknown password from an SSID?
+
+An SSID is a network identifier, not a password container.
+
+The visible `••••••••` representation only masks a secret the application
+already possesses. If VantaWave has no saved credential and no verified
+candidate, there is no real value behind that mask.

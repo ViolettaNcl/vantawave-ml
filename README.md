@@ -7,7 +7,7 @@ classical ML, deep anomaly detection, experiment/model lifecycle, authorized
 security-lab evidence, persistent monitoring, grounded RAG analysis and a
 production SOC dashboard.
 
-> Current release: **v1.0.0**
+> Current release: **v1.0.2**
 
 ## What it demonstrates
 
@@ -99,6 +99,36 @@ portfolio-incident
 ```
 
 Use it in the **AI Analyst** section of the dashboard.
+
+
+## Wi-Fi Recovery
+
+v1.0.1 adds a local Windows recovery assistant.
+
+Open:
+
+```text
+http://127.0.0.1:8000/dashboard
+```
+
+and select **Wi-Fi Recovery**.
+
+It can:
+
+- scan nearby Wi-Fi networks through Windows;
+- list Windows-saved Wi-Fi profiles;
+- reveal a key only when Windows already has it saved and local secret viewing
+  is explicitly enabled;
+- show legitimate router recovery options when no profile exists;
+- audit a password supplied locally;
+- connect Windows using a WPA2/WPA3 passphrase you supply;
+- remove the saved profile afterwards.
+
+If this laptop has never connected to the SSID, there is no stored Windows key
+to reveal. VantaWave does not claim to derive an unknown WPA2/WPA3 password
+from the air.
+
+See `docs/wifi_recovery.md`.
 
 ## Machine Learning layers
 
@@ -271,3 +301,62 @@ VantaWave is designed for:
 - offline captures you are authorized to analyze
 
 It is not presented as a universal Wi‑Fi access/bypass tool.
+
+
+## Authorized Capture Audit
+
+v1.0.2 adds an Aircrack-ng-inspired **authorized capture verification** workflow.
+
+It does **not** implement `SSID → unknown password`.
+
+Instead:
+
+```text
+Authorized Lab target
+  → upload PCAP/PCAPNG/CAP
+  → detect target + EAPOL evidence
+  → verify one locally supplied WPA2 candidate
+  → hold verified candidate temporarily in memory
+  → Connect verified
+```
+
+Dashboard:
+
+```text
+http://127.0.0.1:8000/dashboard
+```
+
+Select **Capture Audit**.
+
+Requirements:
+
+```powershell
+python -m pip install -e ".[dev,deep,pcap]"
+```
+
+Aircrack-ng must also be installed locally. VantaWave looks in `PATH`, or you can set:
+
+```powershell
+$env:VANTAWAVE_AIRCRACK_PATH="C:\Tools\aircrack-ng\aircrack-ng.exe"
+```
+
+The API intentionally exposes no wordlist or brute-force endpoint.
+
+When a candidate is verified, the UI shows a mask such as:
+
+```text
+••••••••••••
+```
+
+The mask itself is not the password. **Connect verified** uses the actual verified
+candidate from an in-memory, short-lived secret vault.
+
+If you explicitly enable local secret viewing:
+
+```powershell
+$env:VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW="true"
+```
+
+then **Copy verified secret** can copy the real in-memory candidate on localhost.
+
+See `docs/authorized_capture_audit.md`.

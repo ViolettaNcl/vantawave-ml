@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: vantawave-ml
-Version: 1.0.0
+Version: 1.0.2
 Summary: Wi-Fi security, persistent monitoring, grounded AI/RAG, MLOps and production engineering platform
 Requires-Python: >=3.11
 Requires-Dist: numpy>=2.0
@@ -13,6 +13,7 @@ Requires-Dist: pydantic>=2.8
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: SQLAlchemy<2.1,>=2.0
 Requires-Dist: alembic<2,>=1.20
+Requires-Dist: python-multipart>=0.0.9
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 Requires-Dist: ruff>=0.6; extra == "dev"
