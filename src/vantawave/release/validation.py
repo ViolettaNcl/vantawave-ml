@@ -19,6 +19,12 @@ def validate_release(root: str | Path = ".") -> list[ReleaseCheck]:
     root = Path(root)
     required_files = [
         "README.md",
+        "README_RU.md",
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        ".github/ISSUE_TEMPLATE/bug_report.md",
+        ".github/ISSUE_TEMPLATE/feature_request.md",
         "SECURITY.md",
         "PROJECT_PROMPT.md",
         "ROADMAP.md",
@@ -39,6 +45,14 @@ def validate_release(root: str | Path = ".") -> list[ReleaseCheck]:
         "src/vantawave/capture_audit/analyzer.py",
         "src/vantawave/capture_audit/aircrack.py",
         "src/vantawave/api/capture_audit_routes.py",
+        "src/vantawave/api/simulation_routes.py",
+        "src/vantawave/simulation/scenarios.py",
+        "src/vantawave/simulation/engine.py",
+        "docs/adversary_simulation.md",
+        "docs/portfolio_showcase.md",
+        "docs/assets/vantawave-hero.gif",
+        "docs/assets/adversary-simulation.gif",
+        "README_RU.md",
         "src/vantawave/wifi_recovery/windows.py",
         "src/vantawave/api/wifi_recovery_routes.py",
     ]

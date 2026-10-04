@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: vantawave-ml
-Version: 1.0.2
+Version: 1.1.0
 Summary: Wi-Fi security, persistent monitoring, grounded AI/RAG, MLOps and production engineering platform
 Requires-Python: >=3.11
 Requires-Dist: numpy>=2.0

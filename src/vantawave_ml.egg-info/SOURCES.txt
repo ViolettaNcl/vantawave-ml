@@ -19,6 +19,7 @@ src/vantawave/api/ai_routes.py
 src/vantawave/api/capture_audit_routes.py
 src/vantawave/api/main.py
 src/vantawave/api/schemas.py
+src/vantawave/api/simulation_routes.py
 src/vantawave/api/wifi_recovery_routes.py
 src/vantawave/capture_audit/__init__.py
 src/vantawave/capture_audit/aircrack.py
@@ -120,6 +121,10 @@ src/vantawave/sensors/features/__init__.py
 src/vantawave/sensors/features/window.py
 src/vantawave/sensors/pcap/__init__.py
 src/vantawave/sensors/pcap/replay.py
+src/vantawave/simulation/__init__.py
+src/vantawave/simulation/engine.py
+src/vantawave/simulation/reporting.py
+src/vantawave/simulation/scenarios.py
 src/vantawave/web/__init__.py
 src/vantawave/web/app.css
 src/vantawave/web/app.js
@@ -177,6 +182,8 @@ tests/test_sensor_storage.py
 tests/test_sensor_window.py
 tests/test_settings_logging.py
 tests/test_shap_adapter.py
+tests/test_simulation.py
+tests/test_simulation_api.py
 tests/test_splitting.py
 tests/test_thresholds.py
 tests/test_v05_report.py

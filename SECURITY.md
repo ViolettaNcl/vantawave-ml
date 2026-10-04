@@ -51,3 +51,25 @@ are not written to reports, database rows, MLflow artifacts or structured logs.
 
 Actual secret retrieval requires both localhost and
 `VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW=true`.
+
+
+## Adversary Simulation safety contract
+
+The `simulation` package is designed for red-team/blue-team learning without
+performing active attacks.
+
+Built-in simulation scenarios:
+
+- create synthetic `WirelessEvent` records;
+- set `simulated_only = true`;
+- set `transmits_packets = false`;
+- require no radio interface;
+- do not test password candidates;
+- do not recover credentials;
+- do not target nearby networks.
+
+Simulation output must never be presented as evidence that a real attack
+occurred.
+
+Any future simulation scenario must preserve the same explicit boundary unless
+it is reviewed as a separate authorized-lab feature.

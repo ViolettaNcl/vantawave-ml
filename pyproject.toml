@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vantawave-ml"
-version = "1.0.2"
+version = "1.1.0"
 description = "Wi-Fi security, persistent monitoring, grounded AI/RAG, MLOps and production engineering platform"
 requires-python = ">=3.11"
 dependencies = [

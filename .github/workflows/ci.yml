@@ -33,6 +33,11 @@ jobs:
           python scripts/build_knowledge_index.py docs
           python scripts/seed_portfolio_demo.py
 
+      - name: Adversary simulation smoke test
+        run: |
+          python scripts/run_adversary_simulation.py deauth_burst --intensity 3 --no-save
+          python scripts/run_adversary_simulation.py rogue_ap_presence --intensity 3 --no-save
+
       - name: Classical lifecycle smoke test
         run: |
           python scripts/generate_awid3_fixture.py

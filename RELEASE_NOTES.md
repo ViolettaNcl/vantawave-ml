@@ -1,3 +1,45 @@
+# VantaWave ML v1.1.0
+
+## Adversary Simulation + Portfolio Polish
+
+### New security-simulation layer
+
+- synthetic deauthentication-burst scenario;
+- synthetic rogue-AP presence;
+- synthetic authentication storm;
+- synthetic retry storm;
+- synthetic credential-pressure telemetry;
+- deterministic baseline/scenario generation;
+- feature-delta comparison;
+- anomaly/confidence/risk output;
+- timeline and detection findings;
+- JSON + Markdown simulation reports;
+- simulation API;
+- SOC dashboard simulation page.
+
+### Safety properties
+
+Every built-in simulation:
+
+- is synthetic;
+- transmits no packets;
+- requires no radio interface;
+- tests no real passwords;
+- targets no external network.
+
+### Portfolio polish
+
+- completely redesigned senior-level README;
+- animated local GitHub hero;
+- animated simulation pipeline;
+- Russian README;
+- updated architecture;
+- portfolio showcase guide;
+- contribution templates;
+- refreshed roadmap and release documentation.
+
+---
+
 # VantaWave ML v1.0.2
 
 ## Authorized Capture Audit patch

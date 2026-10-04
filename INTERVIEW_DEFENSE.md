@@ -157,3 +157,39 @@ An SSID is a network identifier, not a password container.
 The visible `••••••••` representation only masks a secret the application
 already possesses. If VantaWave has no saved credential and no verified
 candidate, there is no real value behind that mask.
+
+
+## Why add an Adversary Simulation layer?
+
+A security-ML project needs repeatable abnormal behavior, but repeatedly
+attacking real infrastructure is neither necessary nor a good testing
+strategy.
+
+VantaWave generates synthetic wireless event streams that use the same
+normalized schema as sensor/replay data. Those events flow through feature
+aggregation and risk logic.
+
+This gives me:
+
+- reproducible security scenarios;
+- deterministic regression tests;
+- before/after feature comparisons;
+- a safe red-team/blue-team demo;
+- a way to explain detector behavior without claiming synthetic data is real.
+
+## Why not make the simulation perform the real attack?
+
+That would tightly couple the learning/demo layer to hardware, drivers,
+permissions and active network operations.
+
+The architecture keeps:
+
+```text
+simulation → synthetic evidence
+authorized sensor/capture → real evidence
+```
+
+as separate provenance classes.
+
+That distinction is important for both engineering correctness and security
+scope.

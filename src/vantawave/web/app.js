@@ -9,6 +9,7 @@ const state = {
     live: "Live Monitor",
     recovery: "Wi-Fi Recovery",
     capture: "Capture Audit",
+    simulation: "Adversary Simulation",
     incidents: "Incidents",
     models: "Models",
     experiments: "Experiments",
@@ -595,6 +596,192 @@ async function copyVerifiedCaptureSecret() {
   }
 }
 
+
+let simulationScenarios = [];
+
+function selectedSimulationScenario() {
+  const id = $("simulation-scenario").value;
+  return simulationScenarios.find(item => item.scenario_id === id) || null;
+}
+
+function renderSimulationDescription() {
+  const scenario = selectedSimulationScenario();
+  if (!scenario) {
+    $("simulation-description").innerHTML = `<div class="empty">No scenario selected.</div>`;
+    $("simulation-learning").innerHTML = `<div class="empty">No scenario selected.</div>`;
+    return;
+  }
+
+  $("simulation-description").innerHTML = `
+    <div class="list-item">
+      <div>
+        <div class="list-title">${esc(scenario.title)}</div>
+        <div class="list-sub">${esc(scenario.description)}</div>
+      </div>
+      ${badge(scenario.category, "neutral")}
+    </div>`;
+
+  $("simulation-learning").innerHTML = `
+    <div class="list-item">
+      <div>
+        <div class="list-title">Learning goal</div>
+        <div class="list-sub">${esc(scenario.learning_goal)}</div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div>
+        <div class="list-title">Expected signals</div>
+        <div class="list-sub">
+          ${(scenario.expected_signals || []).map(x => `<span class="sim-chip">${esc(x)}</span>`).join("")}
+        </div>
+      </div>
+    </div>
+    <div class="list-item">
+      <div>
+        <div class="list-title">Safety boundary</div>
+        <div class="list-sub">${esc(scenario.safe_boundary)}</div>
+      </div>
+      ${badge("no transmission", "good")}
+    </div>`;
+}
+
+async function loadSimulation() {
+  const [caps, result] = await Promise.all([
+    api("/simulation/capabilities"),
+    api("/simulation/scenarios"),
+  ]);
+
+  simulationScenarios = result.scenarios || [];
+
+  $("simulation-safe-badge").textContent =
+    caps.synthetic_only && !caps.transmits_packets ? "Synthetic only" : "Check mode";
+  $("simulation-safe-badge").className =
+    `badge ${caps.synthetic_only && !caps.transmits_packets ? "good" : "warn"}`;
+
+  $("simulation-scenario").innerHTML = simulationScenarios.map(s => `
+    <option value="${esc(s.scenario_id)}">${esc(s.title)}</option>
+  `).join("");
+
+  renderSimulationDescription();
+}
+
+function deltaClass(value) {
+  if (Math.abs(value) < 1e-12) return "feature-neutral";
+  return value > 0 ? "feature-positive" : "feature-negative";
+}
+
+async function runSimulationDashboard() {
+  const scenarioId = $("simulation-scenario").value;
+  const intensity = Number($("simulation-intensity").value);
+  const duration = Number($("simulation-duration").value);
+
+  $("simulation-risk").innerHTML = `<div class="empty">Running deterministic synthetic scenario…</div>`;
+  $("simulation-detections").innerHTML = "";
+  $("simulation-deltas").innerHTML = `<div class="empty">Calculating feature deltas…</div>`;
+  $("simulation-timeline").innerHTML = `<div class="empty">Building timeline…</div>`;
+
+  try {
+    const result = await api("/simulation/run", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        scenario_id: scenarioId,
+        intensity,
+        duration_seconds: duration,
+        seed: 42,
+        persist_report: true,
+      }),
+    });
+
+    const risk = result.risk || {};
+    const score = Number(risk.score || 0);
+
+    $("simulation-risk").innerHTML = `
+      <div class="risk-score">
+        <strong>${score}</strong><span>/ 100</span>
+      </div>
+      <div class="risk-bar"><div style="width:${Math.min(100, Math.max(0, score))}%"></div></div>
+      <div>
+        ${badge(risk.severity || "INFO", severityClass(risk.severity))}
+        <span class="sim-chip">anomaly ${Number(result.anomaly_score || 0).toFixed(3)}</span>
+        <span class="sim-chip">confidence ${Number(result.classifier_confidence || 0).toFixed(3)}</span>
+        <span class="sim-chip">intensity ${esc(result.intensity)}/5</span>
+      </div>
+      <div class="list-sub" style="margin-top:12px">
+        ${esc(result.scenario?.title || scenarioId)} • ${esc(result.simulation_id)}
+      </div>`;
+
+    renderList(
+      $("simulation-detections"),
+      (result.detections || []).map(item => `
+        <div class="list-item">
+          <div>
+            <div class="list-title">Detection</div>
+            <div class="list-sub">${esc(item)}</div>
+          </div>
+          ${badge("triggered", "warn")}
+        </div>
+      `),
+      "No detector rule triggered."
+    );
+
+    const deltas = result.feature_deltas || [];
+    $("simulation-deltas").innerHTML = deltas.length ? `
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Baseline</th><th>Scenario</th><th>Δ</th></tr>
+        </thead>
+        <tbody>
+          ${deltas.map(item => `
+            <tr>
+              <td>${esc(item.feature)}</td>
+              <td>${Number(item.before).toFixed(4)}</td>
+              <td>${Number(item.after).toFixed(4)}</td>
+              <td class="${deltaClass(Number(item.absolute_change))}">
+                ${Number(item.absolute_change) >= 0 ? "+" : ""}${Number(item.absolute_change).toFixed(4)}
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>` : `<div class="empty">No numeric feature changes.</div>`;
+
+    renderList(
+      $("simulation-timeline"),
+      (result.timeline || []).map(item => `
+        <div class="list-item">
+          <div>
+            <div class="list-title">t+${esc(item.second)}s — ${esc(item.event)}</div>
+            <div class="list-sub">${esc(JSON.stringify(item))}</div>
+          </div>
+        </div>
+      `),
+      "No timeline events."
+    );
+
+    const scenario = result.scenario || {};
+    $("simulation-learning").innerHTML = `
+      <div class="list-item">
+        <div><div class="list-title">Learning goal</div><div class="list-sub">${esc(scenario.learning_goal || "")}</div></div>
+      </div>
+      <div class="list-item">
+        <div><div class="list-title">Safety boundary</div><div class="list-sub">${esc(scenario.safe_boundary || "")}</div></div>
+        ${badge(result.transmits_packets ? "transmits" : "no transmission", result.transmits_packets ? "bad" : "good")}
+      </div>
+      <div class="list-item">
+        <div>
+          <div class="list-title">Report</div>
+          <div class="list-sub">
+            ${result.report_paths ? esc(result.report_paths.markdown) : "Report persistence disabled."}
+          </div>
+        </div>
+      </div>`;
+  } catch (error) {
+    $("simulation-risk").innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+    $("simulation-deltas").innerHTML = `<div class="empty">Simulation failed.</div>`;
+    $("simulation-timeline").innerHTML = "";
+  }
+}
+
 async function loadIncidents() {
   try {
     const result = await api("/incidents");
@@ -729,6 +916,7 @@ async function loadView(view) {
     if (view === "live") await loadLive();
     if (view === "recovery") await loadRecovery();
     if (view === "capture") await loadCaptureAudit();
+    if (view === "simulation") await loadSimulation();
     if (view === "incidents") await loadIncidents();
     if (view === "models") await loadModels();
     if (view === "experiments") await loadExperiments();
@@ -770,5 +958,11 @@ $("capture-upload").addEventListener("click", uploadCaptureAudit);
 $("capture-verify").addEventListener("click", verifyCaptureCandidate);
 $("capture-connect").addEventListener("click", connectVerifiedCaptureSecret);
 $("capture-copy-secret").addEventListener("click", copyVerifiedCaptureSecret);
+
+$("simulation-scenario").addEventListener("change", renderSimulationDescription);
+$("simulation-intensity").addEventListener("input", () => {
+  $("simulation-intensity-value").textContent = $("simulation-intensity").value;
+});
+$("simulation-run").addEventListener("click", runSimulationDashboard);
 
 loadOverview();

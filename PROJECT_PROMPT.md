@@ -30,23 +30,37 @@ For each development step:
 
 ## Current baseline
 
-VantaWave ML v1.0.2 includes the final portfolio platform, Windows Wi-Fi
-Recovery and Authorized Capture Audit.
+VantaWave ML v1.1.0 is the polished portfolio release.
 
-Capture Audit follows an evidence-based WPA/WPA2 workflow:
-- explicitly authorized Lab target;
-- local PCAP/PCAPNG/CAP analysis;
-- target SSID/BSSID matching;
-- EAPOL evidence inspection;
-- optional Aircrack-ng integration;
-- exactly one candidate passphrase per verification request;
-- short-lived in-memory verified secret;
-- masked UI display;
-- connect-with-verified-secret;
-- optional localhost-only secret reveal/copy.
+It includes:
+- passive Windows Wi-Fi telemetry;
+- offline PCAP replay;
+- classical/deep ML;
+- MLOps/model lifecycle;
+- Authorized Lab;
+- persistent monitoring;
+- grounded AI/RAG;
+- SOC Dashboard;
+- Wi-Fi Recovery;
+- Authorized Capture Audit;
+- safe Adversary Simulation;
+- Docker/PostgreSQL production engineering.
 
-It must never claim that an unknown WPA2/WPA3 password can be derived from an
-SSID alone. It must not expose a wordlist/brute-force API.
+Adversary Simulation is synthetic-only:
+- no packet transmission;
+- no external targets;
+- no real credential testing;
+- no password recovery;
+- no active attack execution.
 
-Preserve all previous authorization, secret-handling, research-integrity,
-evidence-grounding, database migration and MLOps rules.
+Simulation output uses the same event/feature/risk pipeline for repeatable
+red-team/blue-team demonstrations and tests.
+
+Preserve:
+- authorization boundaries;
+- evidence provenance;
+- distinction between synthetic and real telemetry;
+- held-out evaluation discipline;
+- secret hygiene;
+- grounded AI citations;
+- no fabricated real-world performance claims.

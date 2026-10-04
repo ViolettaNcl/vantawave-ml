@@ -93,3 +93,28 @@ Before claiming real detection performance, run:
 - held-out evaluation.
 
 Record the resulting report separately from synthetic demo metrics.
+
+
+## Adversary Simulation
+
+For the clearest live interview demonstration:
+
+```powershell
+python scripts/run_adversary_simulation.py deauth_burst --intensity 4
+```
+
+Or use the **Adversary Simulation** page in the SOC dashboard.
+
+Recommended sequence:
+
+1. Start with the normal baseline.
+2. Run `Deauthentication burst`.
+3. Show the feature deltas.
+4. Show anomaly/confidence/risk.
+5. Run `Rogue AP presence`.
+6. Explain why the unexpected BSSID changes topology features.
+7. Open the generated Markdown simulation report.
+8. Emphasize that the scenario is synthetic and transmits no packets.
+
+This gives a repeatable security demo without depending on radio hardware or
+performing active attacks.

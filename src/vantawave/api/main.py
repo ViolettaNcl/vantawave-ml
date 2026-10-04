@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 from vantawave.api.ai_routes import router as ai_router
 from vantawave.api.wifi_recovery_routes import router as wifi_recovery_router
 from vantawave.api.capture_audit_routes import router as capture_audit_router
+from vantawave.api.simulation_routes import router as simulation_router
 from vantawave.web.routes import router as web_router
 from vantawave.core.readiness import readiness_report
 from vantawave.core.logging.json_logger import configure_logging
@@ -32,13 +33,14 @@ configure_logging(level=settings.log_level, format_name=settings.log_format)
 
 app = FastAPI(
     title="VantaWave ML",
-    version="1.0.2",
+    version="1.1.0",
     description="Wi-Fi telemetry, ML, deep anomaly detection, MLOps and AI research platform.",
 )
 
 app.include_router(ai_router)
 app.include_router(wifi_recovery_router)
 app.include_router(capture_audit_router)
+app.include_router(simulation_router)
 app.include_router(web_router)
 
 
@@ -46,7 +48,7 @@ app.include_router(web_router)
 def root():
     return {
         "project": "VantaWave ML",
-        "version": "1.0.2",
+        "version": "1.1.0",
         "status": "running",
         "docs": "/docs",
         "health": "/health",
@@ -56,7 +58,7 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "project": "VantaWave ML", "version": "1.0.2"}
+    return {"status": "ok", "project": "VantaWave ML", "version": "1.1.0"}
 
 
 @app.get("/ready")

@@ -9,7 +9,7 @@ def test_root():
     assert response.status_code == 200
     body = response.json()
     assert body["project"] == "VantaWave ML"
-    assert body["version"] == "1.0.2"
+    assert body["version"] == "1.1.0"
 
 
 def test_health():
@@ -156,6 +156,7 @@ def test_dashboard_routes():
     assert "VantaWave ML" in html.text
     assert "Wi-Fi Recovery" in html.text
     assert "Capture Audit" in html.text
+    assert "Adversary Simulation" in html.text
     assert css.status_code == 200
     assert "--accent" in css.text
     assert js.status_code == 200

@@ -81,3 +81,21 @@ On the user's authorized lab:
 
 Do not mark `SSID-only password recovery` complete; that capability does not
 exist in v1.0.2 and is not claimed.
+
+
+## Adversary Simulation validation
+
+- [x] scenario catalog returns synthetic-only scenarios;
+- [x] every scenario reports `transmits_packets = false`;
+- [x] deauthentication scenario changes deauth telemetry;
+- [x] rogue-AP scenario changes BSSID topology;
+- [x] authentication storm changes authentication rate;
+- [x] retry storm changes retry telemetry;
+- [x] credential-pressure scenario does not test passwords;
+- [x] deterministic seed produces repeatable feature/risk output;
+- [x] API exposes no active-attack action;
+- [x] dashboard labels simulation as synthetic;
+- [x] JSON/Markdown report persistence works.
+
+Simulation results are demonstration data and must not be described as observed
+real-world attacks.

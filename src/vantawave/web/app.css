@@ -253,3 +253,71 @@ select {
   border-color: #36586d;
   background: rgba(107,228,255,.035);
 }
+
+
+.simulation-risk {
+  min-height: 170px;
+  border: 1px solid #1a2d3a;
+  border-radius: 14px;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(107,228,255,.07), transparent 40%),
+    rgba(5,14,21,.42);
+}
+.risk-score {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.risk-score strong {
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: -.06em;
+}
+.risk-score span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.risk-bar {
+  height: 8px;
+  background: #09131b;
+  border: 1px solid #1d3341;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 10px 0 12px;
+}
+.risk-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--good), var(--warn), var(--bad));
+}
+.feature-positive { color: var(--bad); }
+.feature-negative { color: var(--good); }
+.feature-neutral { color: var(--muted); }
+.sim-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid #294050;
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 2px 4px 2px 0;
+}
+.sim-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(107,228,255,.5);
+}
+input[type="range"] {
+  padding: 0;
+  height: 6px;
+  border: 0;
+  background: #172734;
+  accent-color: var(--accent);
+  box-shadow: none;
+}

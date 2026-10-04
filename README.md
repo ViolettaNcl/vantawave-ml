@@ -1,86 +1,85 @@
+<div align="center">
+
+<img src="docs/assets/vantawave-hero.gif" alt="VantaWave ML animated banner" width="100%" />
+
 # VantaWave ML
 
-**End-to-end Wi‑Fi Security, Machine Learning, MLOps, Grounded AI & SOC Platform**
+### Wi‑Fi Security Research • Machine Learning • MLOps • Grounded AI • SOC
 
-VantaWave ML is a portfolio/research platform that connects wireless telemetry,
-classical ML, deep anomaly detection, experiment/model lifecycle, authorized
-security-lab evidence, persistent monitoring, grounded RAG analysis and a
-production SOC dashboard.
+[![Version](https://img.shields.io/badge/version-1.1.0-6be4ff?style=for-the-badge)](RELEASE_NOTES.md)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](pyproject.toml)
+[![FastAPI](https://img.shields.io/badge/FastAPI-production-009688?style=for-the-badge&logo=fastapi&logoColor=white)](src/vantawave/api)
+[![PyTorch](https://img.shields.io/badge/PyTorch-autoencoder-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](src/vantawave/ml/deep)
+[![Tests](https://img.shields.io/badge/tests-115%20passing-5be28c?style=for-the-badge)](tests)
+[![CI](https://img.shields.io/github/actions/workflow/status/ViolettaNcl/vantawave-ml/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/ViolettaNcl/vantawave-ml/actions)
+[![Security](https://img.shields.io/github/actions/workflow/status/ViolettaNcl/vantawave-ml/security.yml?branch=main&style=for-the-badge&label=Security)](https://github.com/ViolettaNcl/vantawave-ml/actions)
 
-> Current release: **v1.0.2**
+**An end-to-end defensive Wi‑Fi security platform built as a production-grade ML engineering portfolio project.**
 
-## What it demonstrates
+[Dashboard](#-soc-dashboard) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [Adversary Simulation](#-adversary-simulation) · [ML/MLOps](#-ml--mlops) · [Security Scope](#-security-scope) · [Русская версия](README_RU.md)
 
-- Python engineering and testing
-- data validation / leakage controls
-- classical ML benchmarking
-- anomaly detection
-- PyTorch Autoencoder
-- threshold calibration
-- error analysis
-- explainability
-- MLflow / model registry
-- passive Wi‑Fi telemetry
-- offline 802.11 PCAP replay
-- authorized lab evidence workflow
-- SQLAlchemy / Alembic
-- SQLite / PostgreSQL
-- drift monitoring
-- retraining policy
-- grounded RAG / citations
-- production FastAPI
-- Docker / Compose
-- built-in SOC dashboard
+</div>
 
-## Architecture
+---
+
+## ✦ Why VantaWave
+
+Most ML portfolio projects stop at a notebook and an accuracy score.
+
+**VantaWave does not.**
+
+It connects the full lifecycle:
 
 ```text
-Wi-Fi / PCAP / Research Dataset
-            ↓
-     Sensor + Data Layer
-            ↓
-  Normalized Feature Windows
-            ↓
- Classical ML + Autoencoder
-            ↓
- Evaluation / Registry / SHAP
-            ↓
-       Risk + Incidents
-            ↓
- Monitoring + SQL Persistence
-            ↓
-  Evidence + RAG Retrieval
-            ↓
- Grounded Security Analyst
-            ↓
-   FastAPI + SOC Dashboard
+Wi‑Fi / PCAP / Research Data
+          ↓
+Data Validation & Feature Engineering
+          ↓
+Classical ML + Deep Anomaly Detection
+          ↓
+Threshold Calibration & Error Analysis
+          ↓
+Model Registry / MLflow / Explainability
+          ↓
+Risk & Incident Engine
+          ↓
+Persistent Monitoring & Drift
+          ↓
+Authorized Lab Evidence
+          ↓
+Grounded RAG Security Analyst
+          ↓
+FastAPI + SOC Dashboard
+          ↓
+Docker / PostgreSQL Production Runtime
 ```
 
-See `docs/final_architecture.md`.
+The project is intentionally designed around **engineering boundaries, reproducibility, evidence, and honest evaluation** rather than demo-only metrics.
 
-## Quick start
+---
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
+## ✦ Product Surface
 
-python -m pip install --upgrade pip
-pip install -e ".[dev,deep]"
+| Area | What it does | Status |
+|---|---|---:|
+| **SOC Dashboard** | Overview, live monitor, incidents, models, lab, drift, AI | ✅ |
+| **Passive Wi‑Fi Sensor** | Windows WLAN discovery + normalized events | ✅ |
+| **PCAP Replay** | Offline 802.11 capture analysis | ✅ |
+| **Authorized Lab** | Target registry, sessions, evidence, reports | ✅ |
+| **Capture Audit** | Target-bound EAPOL evidence + single-candidate verification | ✅ |
+| **Adversary Simulation** | Safe synthetic red-team scenarios | ✅ |
+| **Classical ML** | Logistic Regression, Random Forest, HistGradientBoosting | ✅ |
+| **Deep Anomaly Detection** | PyTorch Autoencoder + Isolation Forest baseline | ✅ |
+| **MLOps** | Registry, MLflow, promotion, SHAP, experiment history | ✅ |
+| **Monitoring** | Feature drift, score drift, retraining recommendations | ✅ |
+| **Grounded AI Analyst** | Evidence-first RAG with citations | ✅ |
+| **Production Runtime** | FastAPI, Docker, Compose, PostgreSQL, readiness | ✅ |
 
-python -m pytest
-python scripts/final_portfolio_check.py
-```
+---
 
-## Launch the final portfolio demo
+## ✦ SOC Dashboard
 
-Seed local demonstration records:
-
-```powershell
-python scripts/seed_portfolio_demo.py
-python scripts/build_knowledge_index.py docs
-```
-
-Run API:
+Run:
 
 ```powershell
 python -m uvicorn vantawave.api.main:app --reload
@@ -88,51 +87,197 @@ python -m uvicorn vantawave.api.main:app --reload
 
 Open:
 
-- **SOC Dashboard:** `http://127.0.0.1:8000/dashboard`
-- **API Docs:** `http://127.0.0.1:8000/docs`
-- **Readiness:** `http://127.0.0.1:8000/ready`
-
-The seeded incident ID is:
-
-```text
-portfolio-incident
-```
-
-Use it in the **AI Analyst** section of the dashboard.
-
-
-## Wi-Fi Recovery
-
-v1.0.1 adds a local Windows recovery assistant.
-
-Open:
-
 ```text
 http://127.0.0.1:8000/dashboard
 ```
 
-and select **Wi-Fi Recovery**.
+Dashboard modules:
 
-It can:
+```text
+Overview
+├── Runtime readiness
+├── ML capabilities
+├── Drift summary
+└── Authorized targets
 
-- scan nearby Wi-Fi networks through Windows;
-- list Windows-saved Wi-Fi profiles;
-- reveal a key only when Windows already has it saved and local secret viewing
-  is explicitly enabled;
-- show legitimate router recovery options when no profile exists;
-- audit a password supplied locally;
-- connect Windows using a WPA2/WPA3 passphrase you supply;
-- remove the saved profile afterwards.
+Live Monitor
+├── Sensor capabilities
+└── Windows WLAN discovery
 
-If this laptop has never connected to the SSID, there is no stored Windows key
-to reveal. VantaWave does not claim to derive an unknown WPA2/WPA3 password
-from the air.
+Wi‑Fi Recovery
+├── Saved profile inventory
+├── Nearby Wi‑Fi
+├── Gateway discovery
+├── Password-strength audit
+└── Connect with owner-supplied password
 
-See `docs/wifi_recovery.md`.
+Capture Audit
+├── Authorized target
+├── PCAP / PCAPNG / CAP
+├── EAPOL evidence
+├── Aircrack-ng capability
+└── Single-candidate verification
 
-## Machine Learning layers
+Adversary Simulation
+├── Deauthentication burst
+├── Rogue AP presence
+├── Authentication storm
+├── Retry storm
+└── Credential-pressure simulation
 
-### Supervised baselines
+Incidents / Models / Experiments / Monitoring / AI Analyst
+```
+
+---
+
+## ✦ Adversary Simulation
+
+<img src="docs/assets/adversary-simulation.gif" alt="Adversary Simulation pipeline" width="100%" />
+
+VantaWave includes a **safe red-team simulation layer**. It generates synthetic telemetry and sends it through the defensive pipeline.
+
+No packets are transmitted.
+
+No passwords are tested.
+
+No external Wi‑Fi network is attacked.
+
+### Included scenarios
+
+| Scenario | Defensive signal |
+|---|---|
+| **Deauthentication burst** | deauth rate / management-frame spike |
+| **Rogue AP presence** | unexpected BSSID / duplicate SSID topology |
+| **Authentication storm** | auth-rate and transmitter-count spike |
+| **Retry storm** | retry ratio / RSSI variation |
+| **Credential pressure** | repeated rejected-auth pattern, without testing real credentials |
+
+Run from CLI:
+
+```powershell
+python scripts/run_adversary_simulation.py --list
+```
+
+Example:
+
+```powershell
+python scripts/run_adversary_simulation.py deauth_burst --intensity 4
+```
+
+Every run produces:
+
+- baseline telemetry;
+- scenario telemetry;
+- feature deltas;
+- anomaly score;
+- classifier confidence;
+- risk score;
+- triggered detections;
+- timeline;
+- JSON + Markdown report.
+
+---
+
+## ✦ Architecture
+
+```mermaid
+flowchart TD
+    A[Windows WLAN / PCAP / Research Dataset] --> B[Sensor & Data Layer]
+    B --> C[Normalized Wireless Events]
+    C --> D[Rolling Feature Windows]
+
+    D --> E1[Classical ML]
+    D --> E2[Isolation Forest]
+    D --> E3[PyTorch Autoencoder]
+
+    E1 --> F[Evaluation & Calibration]
+    E2 --> F
+    E3 --> F
+
+    F --> G[Registry / MLflow / SHAP]
+    F --> H[Risk & Incident Engine]
+
+    S[Adversary Simulation] --> C
+
+    H --> I[Authorized Lab Evidence]
+    H --> J[Persistent SQL Layer]
+    I --> J
+
+    J --> K[Feature & Score Drift]
+    K --> L[Retraining Recommendation]
+
+    J --> M[Historical Incidents]
+    N[Knowledge Base] --> O[RAG Retrieval]
+    M --> P[Grounded AI Analyst]
+    O --> P
+
+    P --> Q[FastAPI]
+    L --> Q
+    J --> Q
+    B --> Q
+
+    Q --> R[SOC Dashboard]
+    Q --> T[Docker / PostgreSQL]
+```
+
+Detailed architecture: [`docs/final_architecture.md`](docs/final_architecture.md)
+
+---
+
+## ✦ Quick Start
+
+### 1. Clone
+
+```powershell
+git clone https://github.com/ViolettaNcl/vantawave-ml.git
+cd vantawave-ml
+```
+
+### 2. Create environment
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev,deep,pcap]"
+```
+
+### 4. Verify
+
+```powershell
+python -m pytest
+python scripts/final_portfolio_check.py
+```
+
+### 5. Seed the portfolio demo
+
+```powershell
+python scripts/seed_portfolio_demo.py
+python scripts/build_knowledge_index.py docs
+```
+
+### 6. Launch
+
+```powershell
+python -m uvicorn vantawave.api.main:app --reload
+```
+
+Open:
+
+- Dashboard → `http://127.0.0.1:8000/dashboard`
+- Swagger → `http://127.0.0.1:8000/docs`
+- Readiness → `http://127.0.0.1:8000/ready`
+
+---
+
+## ✦ ML & MLOps
+
+### Supervised models
 
 - Logistic Regression
 - Random Forest
@@ -142,7 +287,10 @@ See `docs/wifi_recovery.md`.
 ### Anomaly detection
 
 - Isolation Forest
-- PyTorch Autoencoder trained on normal-only traffic
+- PyTorch Autoencoder
+- normal-only Autoencoder training
+- validation-normal reconstruction threshold
+- known / unknown attack evaluation
 
 ### Evaluation
 
@@ -151,112 +299,193 @@ See `docs/wifi_recovery.md`.
 - F1
 - PR-AUC
 - ROC-AUC
-- false-positive / false-negative rate
-- confusion matrix
-- threshold calibration
-- known/unknown anomaly recall
-- error analysis
+- False Positive Rate
+- False Negative Rate
+- Confusion Matrix
+- Inference latency
+- Threshold calibration
+- Error analysis
 
-### MLOps
+### Explainability
 
-- experiment store
-- model versions
-- local registry
-- candidate/champion lifecycle
-- MLflow integration
-- SHAP / permutation importance
-- promotion guardrails
-- feature / anomaly-score drift
-- retraining recommendation
+- Permutation importance
+- optional SHAP `TreeExplainer`
 
-## Passive Wi-Fi telemetry
+### Model lifecycle
 
-Windows OS-visible scan:
+```text
+Train
+→ Validate
+→ Calibrate
+→ Test
+→ Error Analysis
+→ Promotion Policy
+→ Candidate / Champion
+→ Monitor
+→ Drift
+→ Retraining Recommendation
+```
+
+---
+
+## ✦ Research Integrity
+
+VantaWave contains synthetic fixtures so the entire pipeline can be reproduced without private data.
+
+Synthetic metrics are **not** presented as real-world Wi‑Fi IDS performance.
+
+Before publishing real detection claims:
+
+```text
+Real external dataset
+      +
+Authorized local telemetry
+      ↓
+Domain-matched held-out evaluation
+      ↓
+Threshold calibration
+      ↓
+Error analysis
+      ↓
+Final evidence-backed metrics
+```
+
+See [`FINAL_VALIDATION.md`](FINAL_VALIDATION.md).
+
+---
+
+## ✦ Passive Wi‑Fi Telemetry
+
+Windows capability check:
 
 ```powershell
 python scripts/sensor_capabilities.py
+```
+
+One scan:
+
+```powershell
 python scripts/scan_wifi.py --once
 ```
 
 Session:
 
 ```powershell
-python scripts/scan_wifi.py --duration 30 --interval 5 --window 60
+python scripts/scan_wifi.py --duration 60 --interval 5 --window 60
 ```
 
-Offline 802.11 replay:
+VantaWave records collection provenance so OS-level discovery is never mislabeled as raw monitor-mode capture.
+
+---
+
+## ✦ Authorized Capture Audit
+
+Capture Audit follows an evidence-based WPA/WPA2 workflow:
+
+```text
+Authorized Target
+→ Capture
+→ Target/EAPOL Evidence
+→ One Owner-Supplied Candidate
+→ Verify
+→ Mask
+→ Connect Verified
+```
+
+The integration deliberately exposes **no wordlist or brute-force API**.
+
+Requirements:
 
 ```powershell
-pip install -e ".[pcap]"
-python scripts/inspect_pcap.py "C:\path\to\authorized-capture.pcapng"
+python -m pip install -e ".[pcap]"
 ```
 
-Windows OS discovery is explicitly distinguished from raw monitor-mode capture.
-
-## Authorized Security Lab
-
-Register only equipment you own or are explicitly allowed to test:
+Optional Aircrack-ng path:
 
 ```powershell
-python scripts/lab_register_target.py `
-  --name "Home Lab AP" `
-  --ssid "My-Lab-WiFi" `
-  --bssid "00:11:22:33:44:55" `
-  --confirm "I own this access point and explicitly authorize security testing."
+$env:VANTAWAVE_AIRCRACK_PATH="C:\Tools\aircrack-ng\aircrack-ng.exe"
 ```
 
-The lab layer supports:
+Documentation: [`docs/authorized_capture_audit.md`](docs/authorized_capture_audit.md)
 
-- stable target IDs
-- session lifecycle
-- before/after telemetry
-- evidence SHA-256
-- risk/incidents
-- experiment reports
+---
 
-## Grounded AI Security Analyst
+## ✦ Grounded AI Security Analyst
 
-The AI layer is **not the detector**.
+The LLM is **not the detector**.
 
-It reads:
+The analyst consumes:
 
-- persisted incident fields
-- incident evidence
-- historical incidents
-- retrieved knowledge chunks
+1. persisted incident evidence;
+2. historical incident records;
+3. retrieved project knowledge.
 
-and produces evidence-grounded reports with stable citations.
+Each concrete claim must use a valid evidence citation.
 
-Default retrieval is local TF-IDF. Optional semantic embeddings:
+Example citation types:
 
-```powershell
-pip install -e ".[embeddings]"
+```text
+[incident:abc123]
+[evidence:abc123]
+[document-id-0001]
 ```
 
-The restricted agent planner does not permit packet injection, credential
-theft, brute force, exploit execution or third-party targeting.
+The restricted agent planner is read-only and defensive.
 
-## Persistent data
+Allowed:
 
-Default:
+```text
+summarize incident
+retrieve knowledge
+compare history
+suggest defensive checks
+generate report
+```
+
+Not exposed:
+
+```text
+packet injection
+credential theft
+brute force
+exploit execution
+third-party targeting
+```
+
+---
+
+## ✦ Persistent Data Platform
+
+VantaWave persists:
+
+- authorized targets;
+- sensor sessions;
+- incidents;
+- drift events;
+- model snapshots;
+- evaluation runs.
+
+Local development:
 
 ```text
 SQLite
 ```
 
-Production option:
+Production:
 
 ```text
 PostgreSQL + Psycopg 3
 ```
 
-Migrations:
+Schema changes use Alembic:
 
 ```powershell
 alembic upgrade head
 ```
 
-## Docker
+---
+
+## ✦ Production
 
 ```powershell
 Copy-Item .env.example .env
@@ -264,99 +493,104 @@ docker compose config
 docker compose up --build
 ```
 
-The production stack uses:
+Production stack includes:
 
-- non-root API container
-- PostgreSQL
-- Alembic migration before startup
-- readiness/health checks
-- structured JSON logs
+- non-root API container;
+- PostgreSQL;
+- Alembic migrations before startup;
+- JSON structured logging;
+- health/readiness checks;
+- dependency audit;
+- static security scan.
 
-## Portfolio documents
+---
 
-- `docs/final_architecture.md`
-- `docs/demo_walkthrough.md`
-- `INTERVIEW_DEFENSE.md`
-- `FINAL_VALIDATION.md`
-- `RELEASE_NOTES.md`
-
-## Research integrity
-
-The repository contains synthetic fixtures to make the complete pipeline
-reproducible.
-
-**Synthetic results must not be presented as real-world Wi‑Fi IDS performance.**
-
-Before publishing real performance claims, complete the external-dataset and
-authorized-hardware items in `FINAL_VALIDATION.md`.
-
-## Security scope
-
-VantaWave is designed for:
-
-- defensive analysis
-- your own equipment
-- explicitly authorized lab targets
-- public research datasets under their terms
-- offline captures you are authorized to analyze
-
-It is not presented as a universal Wi‑Fi access/bypass tool.
-
-
-## Authorized Capture Audit
-
-v1.0.2 adds an Aircrack-ng-inspired **authorized capture verification** workflow.
-
-It does **not** implement `SSID → unknown password`.
-
-Instead:
+## ✦ Repository Map
 
 ```text
-Authorized Lab target
-  → upload PCAP/PCAPNG/CAP
-  → detect target + EAPOL evidence
-  → verify one locally supplied WPA2 candidate
-  → hold verified candidate temporarily in memory
-  → Connect verified
+vantawave-ml/
+├── src/vantawave/
+│   ├── ai/                 # RAG + grounded analyst
+│   ├── api/                # FastAPI routes
+│   ├── capture_audit/      # authorized capture evidence
+│   ├── data/               # loaders / validation / AWID3 adapter
+│   ├── db/                 # SQLAlchemy persistence
+│   ├── experiments/        # experiment history
+│   ├── lab/                # authorized targets / evidence
+│   ├── ml/                 # classical + deep ML
+│   ├── monitoring/         # drift / evaluation policy
+│   ├── registry/           # model registry
+│   ├── risk/               # transparent risk engine
+│   ├── sensors/            # Wi-Fi telemetry / replay
+│   ├── simulation/         # safe adversary scenarios
+│   ├── web/                # SOC dashboard
+│   └── wifi_recovery/      # local Windows recovery tools
+├── alembic/                # database migrations
+├── docs/                   # architecture / research / operations
+├── scripts/                # reproducible workflows
+├── tests/                  # automated test suite
+├── Dockerfile
+├── docker-compose.yml
+├── FINAL_VALIDATION.md
+├── INTERVIEW_DEFENSE.md
+└── RELEASE_NOTES.md
 ```
 
-Dashboard:
+---
+
+## ✦ Security Scope
+
+VantaWave is built for:
+
+- defensive security research;
+- explicitly authorized lab targets;
+- public research datasets under their terms;
+- offline captures the operator is authorized to analyze;
+- synthetic adversary simulation.
+
+It does **not** claim to reveal an unknown WPA2/WPA3 password from an SSID alone.
+
+It does **not** expose active black-hat automation.
+
+See [`SECURITY.md`](SECURITY.md).
+
+---
+
+## ✦ Engineering Principles
 
 ```text
-http://127.0.0.1:8000/dashboard
+Evidence over assumptions
+Reproducibility over screenshots
+Held-out evaluation over optimistic metrics
+Explicit authorization over implicit targeting
+Model lifecycle over one-off notebooks
+Grounded AI over hallucinated security claims
 ```
 
-Select **Capture Audit**.
+---
 
-Requirements:
+## ✦ Portfolio / Interview
 
-```powershell
-python -m pip install -e ".[dev,deep,pcap]"
-```
+Recommended files:
 
-Aircrack-ng must also be installed locally. VantaWave looks in `PATH`, or you can set:
+- [`INTERVIEW_DEFENSE.md`](INTERVIEW_DEFENSE.md)
+- [`FINAL_VALIDATION.md`](FINAL_VALIDATION.md)
+- [`docs/demo_walkthrough.md`](docs/demo_walkthrough.md)
+- [`docs/final_architecture.md`](docs/final_architecture.md)
+- [`docs/adversary_simulation.md`](docs/adversary_simulation.md)
 
-```powershell
-$env:VANTAWAVE_AIRCRACK_PATH="C:\Tools\aircrack-ng\aircrack-ng.exe"
-```
+### 30-second project pitch
 
-The API intentionally exposes no wordlist or brute-force endpoint.
+> VantaWave ML is an end-to-end Wi‑Fi security ML platform. I built the pipeline from telemetry normalization and leakage-safe model evaluation through deep anomaly detection, MLOps, persistent monitoring, authorized lab evidence, a grounded RAG analyst, safe red-team simulation, and a production SOC dashboard.
 
-When a candidate is verified, the UI shows a mask such as:
+---
 
-```text
-••••••••••••
-```
+<div align="center">
 
-The mask itself is not the password. **Connect verified** uses the actual verified
-candidate from an in-memory, short-lived secret vault.
+### VantaWave ML · v1.1.0
 
-If you explicitly enable local secret viewing:
+**Defensive wireless research with production ML engineering discipline.**
 
-```powershell
-$env:VANTAWAVE_ALLOW_LOCAL_CREDENTIAL_VIEW="true"
-```
+`Python` · `FastAPI` · `scikit-learn` · `PyTorch` · `MLflow` · `SHAP` · `SQLAlchemy` · `PostgreSQL` · `Docker`
 
-then **Copy verified secret** can copy the real in-memory candidate on localhost.
-
-See `docs/authorized_capture_audit.md`.
+</div>

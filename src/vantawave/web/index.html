@@ -22,6 +22,7 @@
         <button class="nav-item" data-view="live">Live Monitor</button>
 <button class="nav-item" data-view="recovery">Wi-Fi Recovery</button>
 <button class="nav-item" data-view="capture">Capture Audit</button>
+<button class="nav-item" data-view="simulation">Adversary Simulation</button>
         <button class="nav-item" data-view="incidents">Incidents</button>
         <button class="nav-item" data-view="models">Models</button>
         <button class="nav-item" data-view="experiments">Experiments</button>
@@ -366,6 +367,107 @@
         </div>
       </section>
 
+
+      <section id="view-simulation" class="view">
+        <div class="notice warning">
+          <strong>Safe red-team simulation</strong>
+          <p>
+            These scenarios generate synthetic wireless-security telemetry only.
+            No packets are transmitted, no password candidates are tested, and no
+            real access point is attacked. The goal is to study the blue-team
+            detection pipeline end to end.
+          </p>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Scenario control</span>
+                <h2>Adversary simulation</h2>
+              </div>
+              <span id="simulation-safe-badge" class="badge good">Synthetic only</span>
+            </div>
+
+            <label class="field">
+              <span>Scenario</span>
+              <select id="simulation-scenario"></select>
+            </label>
+
+            <label class="field">
+              <span>Intensity: <strong id="simulation-intensity-value">3</strong>/5</span>
+              <input id="simulation-intensity" type="range" min="1" max="5" value="3" />
+            </label>
+
+            <label class="field">
+              <span>Duration</span>
+              <select id="simulation-duration">
+                <option value="60">60 seconds</option>
+                <option value="90">90 seconds</option>
+                <option value="120">120 seconds</option>
+              </select>
+            </label>
+
+            <button id="simulation-run" class="primary full">Run simulation</button>
+
+            <div id="simulation-description" class="list recovery-block empty">
+              Loading scenarios…
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Detection result</span>
+                <h2>Risk & findings</h2>
+              </div>
+            </div>
+            <div id="simulation-risk" class="simulation-risk empty">
+              Run a scenario to see the detection path.
+            </div>
+            <div id="simulation-detections" class="list recovery-block"></div>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Telemetry</span>
+                <h2>Feature deltas</h2>
+              </div>
+            </div>
+            <div id="simulation-deltas" class="table-wrap">
+              <div class="empty">No simulation result yet.</div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">Timeline</span>
+                <h2>Scenario events</h2>
+              </div>
+            </div>
+            <div id="simulation-timeline" class="list empty">
+              No timeline yet.
+            </div>
+          </article>
+        </div>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Learning notes</span>
+              <h2>What this demonstrates</h2>
+            </div>
+          </div>
+          <div id="simulation-learning" class="list empty">
+            Select a scenario to see its learning objective and safety boundary.
+          </div>
+        </article>
+      </section>
+
       <section id="view-incidents" class="view">
         <article class="panel">
           <div class="panel-head">
@@ -450,7 +552,7 @@
       </section>
 
       <footer class="footer">
-        <span>VantaWave ML v1.0.2</span>
+        <span>VantaWave ML v1.1.0</span>
         <span>Authorized security research • Evidence-first AI</span>
       </footer>
     </main>

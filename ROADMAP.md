@@ -3,10 +3,10 @@
 ## Completed
 
 ### v0.1–v0.4 — ML foundation
-- [x] data-quality checks
-- [x] leakage controls
+- [x] data quality
+- [x] leakage checks
 - [x] classical ML
-- [x] AWID3-oriented research adapter
+- [x] AWID3-oriented research layer
 - [x] held-out evaluation
 
 ### v0.5 — MLOps
@@ -16,7 +16,6 @@
 - [x] model promotion
 - [x] MLflow
 - [x] SHAP
-- [x] rich reports
 
 ### v0.6 — Deep anomaly detection
 - [x] PyTorch Autoencoder
@@ -28,86 +27,83 @@
 ### v0.7 — Passive telemetry
 - [x] Windows WLAN discovery
 - [x] normalized wireless events
-- [x] rolling feature windows
-- [x] JSONL replay
-- [x] offline 802.11 PCAP replay
+- [x] rolling windows
+- [x] offline PCAP replay
 
-### v0.8 — Authorized lab
+### v0.8 — Authorized Security Lab
 - [x] target registry
-- [x] session lifecycle
+- [x] lab sessions
 - [x] evidence hashing
 - [x] before/after comparison
-- [x] incident generation
+- [x] incident reports
 
 ### v0.9 — Persistent monitoring
 - [x] SQLAlchemy
 - [x] Alembic
-- [x] SQLite / PostgreSQL
-- [x] persistent incidents/drift/evaluations
+- [x] SQLite/PostgreSQL
+- [x] drift history
 - [x] anomaly-score drift
-- [x] retraining recommendation
+- [x] retraining recommendations
 
 ### v0.10–v0.11 — Grounded AI + production
-- [x] RAG knowledge ingestion
-- [x] TF-IDF retrieval
-- [x] optional semantic embeddings
+- [x] RAG ingestion/retrieval
 - [x] evidence citations
 - [x] historical similarity
-- [x] restricted agent planner
-- [x] environment config
+- [x] restricted read-only agent
 - [x] JSON logging
 - [x] Docker / Compose
 - [x] production readiness
 - [x] security CI
 
-### v0.12 / v1.0 — SOC & portfolio release
-- [x] professional dark SOC dashboard
-- [x] Overview
-- [x] Live Monitor
-- [x] Incidents
-- [x] Models
-- [x] Experiments
-- [x] Authorized Lab
-- [x] Drift/Monitoring
-- [x] AI Analyst
+### v1.0 — Portfolio SOC release
+- [x] professional SOC dashboard
 - [x] final architecture
 - [x] portfolio demo seed
-- [x] interview-defense guide
+- [x] interview guide
 - [x] release validation
-- [x] v1.0 release notes
 
-### v1.0.1 — Wi-Fi Recovery patch
+### v1.0.1 — Wi-Fi Recovery
 - [x] Windows saved-profile inventory
-- [x] explicit local saved-key export
+- [x] local saved-key export
 - [x] nearby Wi-Fi selection
-- [x] current interface / gateway discovery
+- [x] current interface/gateway discovery
 - [x] local password-strength audit
-- [x] WPA2/WPA3 connection using supplied passphrase
-- [x] saved-profile removal
-- [x] dashboard Recovery page
-- [x] local-only credential safeguards
-- [x] recovery documentation
+- [x] connect using owner-supplied passphrase
 
 ### v1.0.2 — Authorized Capture Audit
 - [x] authorized capture upload
-- [x] target-bound SSID/BSSID verification
-- [x] EAPOL evidence inspection
+- [x] target SSID/BSSID matching
+- [x] EAPOL inspection
 - [x] Aircrack-ng capability detection
-- [x] configurable Aircrack executable path
 - [x] single-candidate WPA2 verification
-- [x] no wordlist/bruteforce API
 - [x] ephemeral verified-secret vault
-- [x] masked secret display
-- [x] connect with verified secret
-- [x] optional localhost-only secret copy
+- [x] masked secret display / verified connection
+
+### v1.1.0 — Adversary Simulation + Portfolio Polish
+- [x] synthetic deauthentication-burst scenario
+- [x] synthetic rogue-AP topology scenario
+- [x] synthetic authentication-storm scenario
+- [x] synthetic retry-storm scenario
+- [x] synthetic credential-pressure scenario
+- [x] baseline-vs-scenario feature deltas
+- [x] risk / detection output
+- [x] JSON + Markdown simulation reports
+- [x] simulation API
+- [x] simulation dashboard
+- [x] animated GitHub assets
+- [x] professional English README
+- [x] Russian README
+- [x] portfolio showcase documentation
+- [x] GitHub contribution templates
 
 ## External validation still required before real-world claims
 
-- [ ] full real external research-dataset benchmark
-- [ ] authorized local telemetry collected on user hardware
-- [ ] domain-shift analysis: research dataset vs local telemetry
-- [ ] Windows live sensor verification on target machine
-- [ ] Docker Desktop production-stack verification on target machine
-- [ ] final screenshots/demo video after those checks
+- [ ] full external research-dataset benchmark
+- [ ] authorized local telemetry on the target Windows machine
+- [ ] domain-shift analysis
+- [ ] Windows sensor verification on target hardware
+- [ ] optional Aircrack-ng capture-audit verification on owned lab capture
+- [ ] Docker Desktop production-stack verification
+- [ ] final real screenshots/demo video after hardware validation
 
 These are evidence-generation tasks, not missing core architecture.
