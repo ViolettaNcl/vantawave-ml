@@ -71,7 +71,8 @@ def aggregate_events(
     duration_seconds = max(float(duration_seconds), 1e-9)
 
     counts = Counter(event.event_type.value for event in ordered)
-    rate = lambda event_type: counts[event_type.value] / duration_seconds
+    def rate(event_type):
+        return counts[event_type.value] / duration_seconds
 
     bssids = {e.bssid for e in ordered if e.bssid}
     transmitters = {e.transmitter for e in ordered if e.transmitter}

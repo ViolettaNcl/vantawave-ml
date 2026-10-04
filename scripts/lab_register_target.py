@@ -1,4 +1,5 @@
-import argparse, json
+import argparse
+import json
 from pathlib import Path
 from vantawave.lab.registry import AuthorizedTarget, AuthorizedTargetRegistry
 
